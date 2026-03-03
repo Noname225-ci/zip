@@ -1,0 +1,135 @@
+
+export const categoryResources: Record<string, any> = {
+    "Streaming Video": {
+        freeSites: [
+            { rank: 1, icon: "📺", name: "Tubi",          desc: "50,000+ movies & shows, 100% free", url: "https://tubitv.com" },
+            { rank: 2, icon: "🎬", name: "Pluto TV",      desc: "300+ live channels & on-demand VOD", url: "https://pluto.tv" },
+            { rank: 3, icon: "🦚", name: "Peacock (Free)", desc: "Hit shows, live sports clips & news", url: "https://peacocktv.com" },
+            { rank: 4, icon: "🎭", name: "Crackle",       desc: "Sony-owned free movies & originals", url: "https://crackle.com" },
+            { rank: 5, icon: "📡", name: "The Roku Channel", desc: "Free movies, live TV & news", url: "https://therokuchannel.roku.com" }
+        ],
+        subreddit: { name: "r/cordcutters", url: "https://www.reddit.com/r/cordcutters/" },
+        subredditDesc: "A community of 450k+ people who've ditched cable. They share deals, free streaming tips, and help you set up antennas, streaming sticks, and VPNs.",
+        newcomerTip: "New to Reddit? Just click the link — you can read everything without an account. Make a free account to ask questions and get personalized setup advice."
+    },
+    "Streaming Music": {
+        freeSites: [
+            { rank: 1, icon: "🎵", name: "Spotify (Free)", desc: "Shuffle mode with ads — still huge library", url: "https://open.spotify.com" },
+            { rank: 2, icon: "🎶", name: "YouTube Music (Free)", desc: "Official music videos & auto-generated mixes", url: "https://music.youtube.com" },
+            { rank: 3, icon: "🔊", name: "SoundCloud (Free)", desc: "Indie artists & emerging talent, no paywall", url: "https://soundcloud.com" },
+            { rank: 4, icon: "💿", name: "Bandcamp",       desc: "Support artists directly, preview any album free", url: "https://bandcamp.com" },
+            { rank: 5, icon: "📻", name: "Radio.garden",   desc: "Live radio from any city on Earth", url: "https://radio.garden" }
+        ],
+        subreddit: { name: "r/spotify", url: "https://www.reddit.com/r/spotify/" },
+        subredditDesc: "Tips to maximize the free tier, find new music, and share playlists. Also check r/musichoarder for managing your own local music library.",
+        newcomerTip: "Reddit is free to browse. No account needed to read threads packed with tips on getting more out of free music services."
+    },
+    "Gaming": {
+        freeSites: [
+            { rank: 1, icon: "🎮", name: "Epic Games Store", desc: "2–3 free AAA games every single week", url: "https://store.epicgames.com/en-US/free-games" },
+            { rank: 2, icon: "🕹️", name: "Steam (Free to Play)", desc: "Hundreds of free-to-play PC games", url: "https://store.steampowered.com/genre/Free%20to%20Play/" },
+            { rank: 3, icon: "🎲", name: "itch.io (Free games)", desc: "Thousands of indie games, many free", url: "https://itch.io/games/free" },
+            { rank: 4, icon: "🏆", name: "GOG Free Games",  desc: "DRM-free classic games given away free", url: "https://www.gog.com/en/games?priceRange=0,0" },
+            { rank: 5, icon: "☁️", name: "Xbox Free to Play", desc: "Free-to-play Xbox & PC games, no subscription", url: "https://www.xbox.com/en-US/games/free-to-play" }
+        ],
+        subreddit: { name: "r/patientgamers", url: "https://www.reddit.com/r/patientgamers/" },
+        subredditDesc: "A community that waits for sales and finds incredible value. Threads on the best cheap/free games, deal alerts, and how to backlog smart rather than spend constantly.",
+        newcomerTip: "No Reddit account? No problem — browse freely. Once you sign up (it's free), ask for game recommendations based on your exact budget and tastes."
+    },
+    "News & Magazines": {
+        freeSites: [
+            { rank: 1, icon: "📰", name: "BBC News",        desc: "World-class journalism, fully free online", url: "https://www.bbc.com/news" },
+            { rank: 2, icon: "🌐", name: "Reuters",         desc: "Wire service news without opinion slant", url: "https://www.reuters.com" },
+            { rank: 3, icon: "🗞️", name: "The Guardian",    desc: "UK paper, no paywall — donation funded", url: "https://theguardian.com" },
+            { rank: 4, icon: "📻", name: "NPR News",         desc: "Balanced US news, podcasts & live radio", url: "https://www.npr.org" },
+            { rank: 5, icon: "📖", name: "Libby (Library)",  desc: "Free digital magazines via your library card", url: "https://libbyapp.com" }
+        ],
+        subreddit: { name: "r/worldnews", url: "https://www.reddit.com/r/worldnews/" },
+        subredditDesc: "Millions of readers sharing breaking news, analysis, and links to free articles. Great for bypassing paywalls via free archive tools shared in comments.",
+        newcomerTip: "Reddit communities often share gift links and archive links to paywalled articles. Browse the comments — you'll find most major news stories are freely accessible."
+    },
+    "Software & Productivity": {
+        freeSites: [
+            { rank: 1, icon: "📝", name: "LibreOffice",     desc: "Full Microsoft Office alternative, 100% free", url: "https://www.libreoffice.org" },
+            { rank: 2, icon: "🎨", name: "GIMP",            desc: "Professional image editor, free forever", url: "https://www.gimp.org" },
+            { rank: 3, icon: "✏️", name: "Canva (Free)",     desc: "Design templates, presentations & graphics", url: "https://www.canva.com" },
+            { rank: 4, icon: "📋", name: "Notion (Free)",    desc: "Notes, wikis & project management for personal use", url: "https://www.notion.so" },
+            { rank: 5, icon: "🗂️", name: "Google Workspace", desc: "Docs, Sheets, Slides & 15GB Drive — all free", url: "https://workspace.google.com" }
+        ],
+        subreddit: { name: "r/software", url: "https://www.reddit.com/r/software/" },
+        subredditDesc: "Find free, open-source, or one-time-purchase alternatives to expensive subscription software. Also try r/AlternativeTo for crowd-sourced comparisons.",
+        newcomerTip: "Search Reddit for 'free alternative to [your software]' — you'll almost always find better options than what you're paying for. No account needed to search."
+    },
+    "Cloud Storage": {
+        freeSites: [
+            { rank: 1, icon: "☁️", name: "Google Drive",    desc: "15 GB free — works on all devices", url: "https://drive.google.com" },
+            { rank: 2, icon: "🍎", name: "iCloud (Free)",    desc: "5 GB free tier, built into Apple devices", url: "https://www.icloud.com" },
+            { rank: 3, icon: "🪟", name: "OneDrive (Free)",  desc: "5 GB free, deep Windows & Office integration", url: "https://onedrive.live.com" },
+            { rank: 4, icon: "📦", name: "Mega",             desc: "20 GB free with end-to-end encryption", url: "https://mega.nz" },
+            { rank: 5, icon: "🔄", name: "Sync.com (Free)",  desc: "5 GB free with zero-knowledge encryption", url: "https://www.sync.com" }
+        ],
+        subreddit: { name: "r/DataHoarder", url: "https://www.reddit.com/r/DataHoarder/" },
+        subredditDesc: "Enthusiasts who optimize storage, run home NAS servers, and find the best cloud deals. Get advice on stacking free tiers from multiple providers.",
+        newcomerTip: "Combine free tiers from multiple providers (Google + OneDrive + Mega) to get 40+ GB free. The DataHoarder community on Reddit explains exactly how."
+    },
+    "VPN": {
+        freeSites: [
+            { rank: 1, icon: "🔒", name: "ProtonVPN (Free)", desc: "Truly unlimited free tier — no data cap", url: "https://protonvpn.com/free-vpn" },
+            { rank: 2, icon: "🛡️", name: "Windscribe (Free)", desc: "10 GB/month free, strong privacy policy", url: "https://windscribe.com" },
+            { rank: 3, icon: "🌐", name: "TunnelBear (Free)", desc: "500 MB/month free, very easy to use", url: "https://www.tunnelbear.com" },
+            { rank: 4, icon: "🔐", name: "hide.me (Free)",    desc: "10 GB/month free, no logs policy", url: "https://hide.me/en/vpn/free" },
+            { rank: 5, icon: "🦊", name: "Mozilla VPN",       desc: "Trusted brand — check for free trial offers", url: "https://www.mozilla.org/products/vpn/" }
+        ],
+        subreddit: { name: "r/VPN", url: "https://www.reddit.com/r/VPN/" },
+        subredditDesc: "Unbiased VPN advice from privacy enthusiasts. They cut through marketing hype and recommend based on actual audit results and privacy policies — not affiliate commissions.",
+        newcomerTip: "VPN review sites are often paid affiliates. Reddit's r/VPN community gives honest, commission-free recommendations based on real-world testing."
+    },
+    "Fitness & Wellness": {
+        freeSites: [
+            { rank: 1, icon: "🧘", name: "YouTube Fitness",  desc: "Millions of free workouts for every level", url: "https://www.youtube.com/results?search_query=free+workout" },
+            { rank: 2, icon: "👟", name: "Nike Training Club", desc: "Free app with 100+ workout plans", url: "https://www.nike.com/ntc-app" },
+            { rank: 3, icon: "🏋️", name: "Darebee.com",      desc: "1,000+ free workout plans, no ads, no account", url: "https://darebee.com" },
+            { rank: 4, icon: "🧠", name: "Insight Timer",     desc: "Largest free meditation app — 100k+ sessions", url: "https://insighttimer.com" },
+            { rank: 5, icon: "📱", name: "MyFitnessPal (Free)", desc: "Calorie & nutrition tracking, free tier", url: "https://www.myfitnesspal.com" }
+        ],
+        subreddit: { name: "r/Fitness", url: "https://www.reddit.com/r/Fitness/" },
+        subredditDesc: "The definitive fitness community with 10M+ members. Browse the wiki for free beginner programs that outperform most paid apps. Ask questions, get science-backed advice.",
+        newcomerTip: "The r/Fitness wiki has free beginner workout programs that are genuinely better than most paid apps. No Reddit account needed — just read the wiki directly."
+    },
+    "Meal Kits & Food": {
+        freeSites: [
+            { rank: 1, icon: "🍳", name: "AllRecipes",       desc: "Millions of free recipes with reviews", url: "https://www.allrecipes.com" },
+            { rank: 2, icon: "👨‍🍳", name: "Budget Bytes",    desc: "Cheap, delicious recipes with cost-per-serving", url: "https://www.budgetbytes.com" },
+            { rank: 3, icon: "🥗", name: "Mealime (Free)",    desc: "Free weekly meal plans with shopping lists", url: "https://www.mealime.com" },
+            { rank: 4, icon: "🛒", name: "Supercook",         desc: "Find recipes based on what you already have", url: "https://www.supercook.com" },
+            { rank: 5, icon: "📺", name: "YouTube Cooking",   desc: "Pro chefs teaching free — Babish, Joshua Weissman", url: "https://www.youtube.com/results?search_query=meal+prep+beginners" }
+        ],
+        subreddit: { name: "r/mealprep", url: "https://www.reddit.com/r/mealprep/" },
+        subredditDesc: "Learn to batch-cook a week's meals for less than a single meal kit. Budget templates, beginner guides, and recipe ideas shared by the community every day.",
+        newcomerTip: "r/mealprep shows you how to cook 10+ meals in 2 hours for under $50 — far cheaper than any meal kit. The community is welcoming to complete beginners."
+    },
+    "Subscription Boxes": {
+        freeSites: [
+            { rank: 1, icon: "💄", name: "Sample Society",    desc: "Free beauty samples from major brands", url: "https://www.ulta.com/free-samples" },
+            { rank: 2, icon: "🛍️", name: "PINCHme",          desc: "Free product samples in exchange for reviews", url: "https://www.pinchme.com" },
+            { rank: 3, icon: "🧴", name: "Sephora Samples",   desc: "3 free samples with any Sephora order", url: "https://www.sephora.com" },
+            { rank: 4, icon: "🛒", name: "ThredUp",           desc: "Secondhand clothing — fraction of the price", url: "https://www.thredup.com" },
+            { rank: 5, icon: "👗", name: "Poshmark",          desc: "Buy/sell secondhand fashion, huge selection", url: "https://www.poshmark.com" }
+        ],
+        subreddit: { name: "r/BeautyBoxes", url: "https://www.reddit.com/r/BeautyBoxes/" },
+        subredditDesc: "Community that reviews subscription boxes, shares spoilers, and — crucially — tells you which boxes offer one-time purchases instead of subscriptions.",
+        newcomerTip: "The community often identifies when boxes go on sale or when you can get the same products cheaper directly. Browse without an account for instant savings tips."
+    },
+    "Education & Learning": {
+        freeSites: [
+            { rank: 1, icon: "🎓", name: "Coursera (Audit)",  desc: "Audit 3,000+ university courses for free", url: "https://www.coursera.org" },
+            { rank: 2, icon: "📚", name: "edX (Audit)",       desc: "MIT, Harvard & more — free to audit", url: "https://www.edx.org" },
+            { rank: 3, icon: "💻", name: "freeCodeCamp",      desc: "Full coding curriculum, 100% free, certifications", url: "https://www.freecodecamp.org" },
+            { rank: 4, icon: "🎨", name: "Khan Academy",      desc: "Math, science, history — free for everyone", url: "https://www.khanacademy.org" },
+            { rank: 5, icon: "📖", name: "LinkedIn Learning (Library)", desc: "Free access via many public library cards", url: "https://www.linkedin.com/learning/" }
+        ],
+        subreddit: { name: "r/learnprogramming", url: "https://www.reddit.com/r/learnprogramming/" },
+        subredditDesc: "For coding specifically — or try r/YouShouldKnow for general life skills. Members share the best free resources and honest reviews of paid platforms.",
+        newcomerTip: "Before paying for any online course, check Reddit first. The community often confirms that the free version of a course platform is sufficient for your goals."
+    }
+};
