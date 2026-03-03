@@ -147,14 +147,25 @@ export default function RunwayCalculator() {
   const handleExport = () => {
     const doc = new jsPDF();
 
-    doc.setFontSize(20);
-    doc.text("Freedom Runway Report", 14, 22);
+    // Custom Header
+    doc.setFillColor(99, 102, 241); // Indigo-500
+    doc.rect(0, 0, 210, 40, 'F');
 
-    doc.setFontSize(12);
-    doc.text(`Generated on ${new Date().toLocaleDateString()}`, 14, 30);
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont("helvetica", "bold");
+    doc.text("Freedom Runway Report", 14, 25);
 
-    doc.setFontSize(14);
-    doc.text("Summary", 14, 40);
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.text(`Generated on ${new Date().toLocaleDateString()}`, 14, 32);
+
+    // Reset text color for body
+    doc.setTextColor(30, 41, 59); // slate-800
+
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Financial Summary", 14, 55);
 
     const summaryData = [
       ["Runway", runway.months === 999 ? "Infinite" : `${runway.months.toFixed(1)} Months`],
@@ -165,12 +176,18 @@ export default function RunwayCalculator() {
     ];
 
     autoTable(doc, {
-      startY: 45,
+      startY: 60,
       head: [['Metric', 'Value']],
       body: summaryData,
+      theme: 'striped',
+      headStyles: { fillColor: [99, 102, 241], fontSize: 12 },
+      styles: { fontSize: 11, cellPadding: 6 },
+      columnStyles: { 0: { fontStyle: 'bold' } }
     });
 
-    doc.text("Monthly Expenses Breakdown", 14, (doc as any).lastAutoTable.finalY + 10);
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Monthly Expenses Breakdown", 14, (doc as any).lastAutoTable.finalY + 15);
 
     const expensesData = Object.entries(expenses)
       .filter(([_, val]) => parseFloat(val as string) > 0)
@@ -181,10 +198,28 @@ export default function RunwayCalculator() {
       .map(([key, val]) => [key.charAt(0).toUpperCase() + key.slice(1) + " (Debt)", formatCurrency(parseFloat(val as string))]);
 
     autoTable(doc, {
-      startY: (doc as any).lastAutoTable.finalY + 15,
+      startY: (doc as any).lastAutoTable.finalY + 20,
       head: [['Category', 'Amount']],
       body: [...expensesData, ...debtsData],
+      theme: 'striped',
+      headStyles: { fillColor: [79, 70, 229], fontSize: 12 }, // Indigo-600
+      styles: { fontSize: 11, cellPadding: 6 },
+      columnStyles: { 0: { fontStyle: 'bold' } }
     });
+
+    // Footer
+    const pageCount = (doc as any).internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(10);
+      doc.setTextColor(148, 163, 184); // slate-400
+      doc.text(
+        `Page ${i} of ${pageCount}`,
+        doc.internal.pageSize.getWidth() / 2,
+        doc.internal.pageSize.getHeight() - 10,
+        { align: 'center' }
+      );
+    }
 
     doc.save("freedom-runway-report.pdf");
   };
