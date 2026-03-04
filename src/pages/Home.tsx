@@ -113,7 +113,7 @@ export default function Home() {
       if (Notification.permission === 'granted') {
         new Notification(`Renewing Soon: ${subName}`, {
           body: `Your subscription renews on ${due.toLocaleDateString()}. Time to cancel?`,
-          icon: '/vite.svg' // Fallback icon
+          icon: '/logo.png' // Fallback icon
         });
       }
     }
@@ -371,8 +371,8 @@ export default function Home() {
       <header className="bg-[#1e293b]/80 border-b border-slate-700 sticky top-0 z-50 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl">
           <div className="flex items-center gap-3">
-            <div className="bg-indigo-500 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/20 rotate-3 hover:rotate-0 transition-transform">
-              <Calculator size={24} strokeWidth={3} />
+            <div className="bg-indigo-500 p-1 rounded-xl text-white shadow-lg shadow-indigo-500/20 rotate-3 hover:rotate-0 transition-transform overflow-hidden">
+              <img src="/logo.png" alt="Wasted or Worth It Logo" className="w-8 h-8 object-contain" />
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-white leading-none font-display">
