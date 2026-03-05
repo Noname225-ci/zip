@@ -775,25 +775,6 @@ export default function Home() {
                   Set a calendar reminder 3 days before any free trial ends. Companies bank on you forgetting!
                 </p>
               </div>
-
-              {/* Donation Section */}
-              <div className="bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-3xl p-6 border border-pink-500/30">
-                <div className="flex items-center gap-2 mb-4 text-pink-400">
-                  <Heart size={20} className="fill-pink-500/20" />
-                  <h4 className="font-bold">Support This Tool</h4>
-                </div>
-                <p className="text-slate-300 text-sm leading-relaxed mb-4">
-                  We built this tool to help you save money. If it helped you, consider buying us a coffee to keep the servers running!
-                </p>
-                <a
-                  href="https://www.paypal.com/ncp/payment/ZV4T3R657PGWG"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full py-3 bg-pink-500 hover:bg-pink-600 text-white text-center rounded-xl font-bold transition-colors shadow-lg shadow-pink-500/20"
-                >
-                  Donate
-                </a>
-              </div>
             </div>
 
           </div>
