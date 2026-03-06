@@ -19,7 +19,6 @@ import {
   ChevronDown,
   Check,
   Bell,
-  Heart,
   Plus
 } from 'lucide-react';
 import { subscriptionsData, categoryThresholds, defaultThresholds } from '../data/subscriptions';
@@ -113,7 +112,7 @@ export default function Home() {
       if (Notification.permission === 'granted') {
         new Notification(`Renewing Soon: ${subName}`, {
           body: `Your subscription renews on ${due.toLocaleDateString()}. Time to cancel?`,
-          icon: '/vite.svg' // Fallback icon
+          icon: '/logo.png' // Fallback icon
         });
       }
     }
@@ -371,8 +370,8 @@ export default function Home() {
       <header className="bg-[#1e293b]/80 border-b border-slate-700 sticky top-0 z-50 backdrop-blur-md">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between max-w-7xl">
           <div className="flex items-center gap-3">
-            <div className="bg-indigo-500 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/20 rotate-3 hover:rotate-0 transition-transform">
-              <Calculator size={24} strokeWidth={3} />
+            <div className="bg-indigo-500 p-1 rounded-xl text-white shadow-lg shadow-indigo-500/20 rotate-3 hover:rotate-0 transition-transform overflow-hidden">
+              <img src="/logo.png" alt="Wasted or Worth It Logo" className="w-8 h-8 object-contain" />
             </div>
             <div>
               <h1 className="text-2xl font-bold tracking-tight text-white leading-none font-display">
@@ -774,25 +773,6 @@ export default function Home() {
                 <p className="text-slate-300 text-sm leading-relaxed">
                   Set a calendar reminder 3 days before any free trial ends. Companies bank on you forgetting!
                 </p>
-              </div>
-
-              {/* Donation Section */}
-              <div className="bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-3xl p-6 border border-pink-500/30">
-                <div className="flex items-center gap-2 mb-4 text-pink-400">
-                  <Heart size={20} className="fill-pink-500/20" />
-                  <h4 className="font-bold">Support This Tool</h4>
-                </div>
-                <p className="text-slate-300 text-sm leading-relaxed mb-4">
-                  We built this tool to help you save money. If it helped you, consider buying us a coffee to keep the servers running!
-                </p>
-                <a
-                  href="https://www.paypal.com/ncp/payment/ZV4T3R657PGWG"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full py-3 bg-pink-500 hover:bg-pink-600 text-white text-center rounded-xl font-bold transition-colors shadow-lg shadow-pink-500/20"
-                >
-                  Donate
-                </a>
               </div>
             </div>
 
