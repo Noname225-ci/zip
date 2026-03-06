@@ -19,7 +19,6 @@ import {
   ChevronDown,
   Check,
   Bell,
-  Heart,
   Plus
 } from 'lucide-react';
 import { subscriptionsData, categoryThresholds, defaultThresholds } from '../data/subscriptions';
