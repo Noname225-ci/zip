@@ -1,5 +1,5 @@
 {
-  "$schema": "node_modules/wrangler/config-schema.json",
+  "$schema": "https://unpkg.com/wrangler@latest/config-schema.json",
   "name": "zip",
   "compatibility_date": "2025-09-27",
   "observability": {
