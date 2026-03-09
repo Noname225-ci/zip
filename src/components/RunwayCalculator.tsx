@@ -446,7 +446,7 @@ export default function RunwayCalculator() {
                 {/* What-If Slider */}
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <label className="text-sm font-bold text-slate-300 flex items-center gap-2">
+                    <label htmlFor="expense-reduction-slider" className="text-sm font-bold text-slate-300 flex items-center gap-2">
                       <Percent size={16} className="text-indigo-400" /> "What If" I cut expenses?
                     </label>
                     <span className="text-indigo-400 font-bold bg-indigo-400/10 px-3 py-1 rounded-lg text-sm">
@@ -455,6 +455,7 @@ export default function RunwayCalculator() {
                   </div>
                   <div className="relative w-full h-6 flex items-center">
                     <input
+                      id="expense-reduction-slider"
                       type="range"
                       min="0"
                       max="50"
