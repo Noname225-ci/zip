@@ -1,4 +1,4 @@
-import { useState, useRef, FormEvent, useEffect, lazy, Suspense } from 'react';
+import { useState, useRef, FormEvent, useEffect } from 'react';
 import SEO from '../components/SEO';
 import { motion, AnimatePresence } from 'motion/react';
 import {
@@ -28,7 +28,7 @@ import '../index.css';
 import { useCurrency } from '../context/CurrencyContext';
 import { useSubscription } from '../context/SubscriptionContext';
 import CurrencySelector from '../components/CurrencySelector';
-const RunwayCalculator = lazy(() => import('../components/RunwayCalculator'));
+import RunwayCalculator from '../components/RunwayCalculator';
 import { secureStorage } from '../utils/secureStorage';
 
 interface CalculationResult {
@@ -111,8 +111,8 @@ export default function Home() {
 
       // Browser Notification
       if (Notification.permission === 'granted') {
-        new Notification(`Renewing Soon: ${subName}`, {
-          body: `Your subscription renews on ${due.toLocaleDateString()}. Time to cancel?`,
+        new Notification(`Renewing Soon: ${subName} `, {
+          body: `Your subscription renews on ${due.toLocaleDateString()}. Time to cancel ? `,
           icon: '/logo.png' // Fallback icon
         });
       }
@@ -414,13 +414,7 @@ export default function Home() {
 
         {/* 1. FREEDOM RUNWAY CALCULATOR */}
         <div id="runway" className="mb-20">
-          <Suspense fallback={
-            <div className="w-full h-[400px] bg-slate-800/20 animate-pulse rounded-3xl flex items-center justify-center text-slate-500 font-bold">
-              Loading Financial Tools...
-            </div>
-          }>
-            <RunwayCalculator />
-          </Suspense>
+          <RunwayCalculator />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
