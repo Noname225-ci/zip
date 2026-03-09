@@ -1,9 +1,16 @@
 import { FileText, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 export default function TermsOfService() {
   return (
     <div className="min-h-screen bg-[#0f172a] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white pb-20 pt-24">
+      <SEO
+        title="Terms of Service"
+        description="Rules and guidelines for using the Wasted or Worth It? calculators and financial tools."
+        keywords="terms of service, user agreement, financial tool usage, legal terms"
+        canonical="https://wastedorworthit.com/terms"
+      />
       <div className="container mx-auto px-4 max-w-3xl">
         <Link to="/" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 mb-8 font-bold transition-colors">
           <ArrowLeft size={20} /> Back to Calculator

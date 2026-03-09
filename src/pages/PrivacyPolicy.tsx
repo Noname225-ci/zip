@@ -1,9 +1,16 @@
 import { Shield, ArrowLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-[#0f172a] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white pb-20 pt-24">
+      <SEO
+        title="Privacy Policy"
+        description="Learn how Wasted or Worth It? protects your financial data. We are a privacy-first platform with no client-side data collection."
+        keywords="privacy policy, data security, financial privacy, secure financial tools, personal data protection"
+        canonical="https://wastedorworthit.com/privacy"
+      />
       <div className="container mx-auto px-4 max-w-3xl">
         <Link to="/" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 mb-8 font-bold transition-colors">
           <ArrowLeft size={20} /> Back to Calculator

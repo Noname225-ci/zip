@@ -1,4 +1,5 @@
 import { useState, useRef, FormEvent, useEffect } from 'react';
+import SEO from '../components/SEO';
 import { motion, AnimatePresence } from 'motion/react';
 import {
   Calculator,
@@ -365,6 +366,26 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0f172a] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white pb-20">
+      <SEO
+        title="Freedom Runway & Subscription Value Calculator"
+        description="Calculate your financial freedom runway and the true cost-per-use of your subscriptions. Discover if your expenses are worth it with our free financial tools."
+        keywords="financial freedom, freedom runway calculator, financial independence, FIRE calculator, subscription cost per use, subscription tracker, save money, budget optimization, recurring expense tracker, cancel subscriptions, personal finance tools, money management, cost per use calculator"
+        canonical="https://wastedorworthit.com/"
+        schema={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "Freedom Runway & Subscription Value Calculator",
+          "url": "https://wastedorworthit.com/",
+          "description": "Tools to calculate financial independence runway and track subscription value through cost-per-use analysis.",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "Any",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          }
+        }}
+      />
 
       {/* Header */}
       <header className="bg-[#1e293b]/80 border-b border-slate-700 sticky top-0 z-50 backdrop-blur-md">
@@ -374,9 +395,9 @@ export default function Home() {
               <img src="/logo.png" alt="Wasted or Worth It Logo" className="w-8 h-8 object-contain" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold tracking-tight text-white leading-none font-display">
+              <div className="text-2xl font-bold tracking-tight text-white leading-none font-display">
                 Wasted <span className="text-indigo-400">or</span> Worth It?
-              </h1>
+              </div>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -409,10 +430,10 @@ export default function Home() {
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
               <div className="relative z-10">
-                <h2 className="text-4xl md:text-6xl font-display font-bold mb-4 leading-tight">
+                <h1 className="text-4xl md:text-6xl font-display font-bold mb-4 leading-tight">
                   Stop Guessing. <br />
-                  <span className="text-indigo-200">Know the Cost.</span>
-                </h2>
+                  <span className="text-indigo-200">Calculate Your Financial Freedom.</span>
+                </h1>
                 <p className="text-lg text-indigo-100 max-w-xl font-medium">
                   Find out exactly how much each watch, listen, or session actually costs you. Is it worth it?
                 </p>
