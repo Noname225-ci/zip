@@ -1,0 +1,126 @@
+{
+  "nav": {
+    "runway": "Autonomia",
+    "subscriptions": "Assinaturas"
+  },
+  "hero": {
+    "headline1": "Pare de adivinhar.",
+    "headline2": "Calcule sua liberdade financeira.",
+    "sub": "Descubra exatamente quanto custa cada visualização, escuta ou sessão. Vale a pena?"
+  },
+  "howItWorks": {
+    "title": "Como funciona",
+    "step1_title": "Escolha uma assinatura",
+    "step1_desc": "Pesquise entre mais de 60 serviços pré-carregados ou insira o seu.",
+    "step2_title": "Insira seu uso",
+    "step2_desc": "Quantas vezes por mês você realmente usa?",
+    "step3_title": "Receba seu veredicto",
+    "step3_desc": "Veja seu custo real por uso e se vale a pena continuar."
+  },
+  "calculator": {
+    "title": "Calcular o valor",
+    "service_label": "1. Serviço",
+    "service_placeholder": "Pesquisar assinatura (ex. Netflix, Academia...)",
+    "cost_label": "2. Custo",
+    "cost_placeholder": "15,99",
+    "billing_label": "Cobrança",
+    "billing_monthly": "Mensal",
+    "billing_yearly": "Anual",
+    "usage_label": "3. Usos por mês",
+    "calculate_btn": "Calcular",
+    "calculating_btn": "Calculando...",
+    "reset_btn": "Redefinir",
+    "no_matches": "Nenhum resultado encontrado.",
+    "no_matches_hint": "Tente pesquisar por uma categoria como \"Música\" ou \"Fitness\".",
+    "error_select": "Por favor, selecione uma assinatura da lista.",
+    "error_cost": "Por favor, insira um custo válido maior que 0.",
+    "error_usage": "Por favor, informe quantas vezes usa por mês."
+  },
+  "verdict": {
+    "good": "Ótimo custo-benefício!",
+    "consider": "Mais ou menos",
+    "wasted": "Desperdício de dinheiro",
+    "cost_per_use": "Custo por uso",
+    "monthly_cost": "Custo mensal",
+    "annual_cost": "Custo anual",
+    "add_dashboard": "Adicionar ao painel",
+    "added": "Adicionado!",
+    "alternatives_title": "Alternativas gratuitas",
+    "tips_title": "Dicas para economizar"
+  },
+  "reminder": {
+    "title": "Definir um lembrete de renovação",
+    "billing_date_label": "Próxima data de cobrança",
+    "days_label": "Lembrar-me",
+    "days_before": "dias antes",
+    "set_btn": "Definir lembrete",
+    "set_success": "Lembrete definido!",
+    "permission_denied": "Permissão de notificação negada. Por favor, ative nas configurações do navegador."
+  },
+  "dashboard": {
+    "title": "Meu painel de assinaturas",
+    "empty": "Nenhuma assinatura adicionada ainda. Calcule uma acima para adicionar aqui.",
+    "monthly_total": "Total mensal",
+    "yearly_total": "Total anual",
+    "money_pits": "Desperdícios",
+    "remove": "Remover"
+  },
+  "resources": {
+    "title": "Alternativas gratuitas a",
+    "subreddit_label": "Dica da comunidade",
+    "newcomer_tip_label": "Novo no Reddit?"
+  },
+  "runway": {
+    "toggle_label": "Calculadora de autonomia financeira",
+    "toggle_sub": "Calcule por quanto tempo suas economias podem sustentá-lo",
+    "expand": "Abrir calculadora",
+    "collapse": "Fechar",
+    "title": "Calculadora de autonomia financeira",
+    "income_label": "Renda mensal (após impostos)",
+    "income_placeholder": "ex. 3500",
+    "savings_label": "Poupança disponível",
+    "savings_placeholder": "ex. 20000",
+    "expenses_title": "Despesas mensais",
+    "debts_title": "Pagamentos mensais de dívidas",
+    "reduction_label": "Cenário de redução de despesas",
+    "safety_buffer_label": "Manter reserva de emergência de 3 meses",
+    "result_runway": "Autonomia",
+    "result_months": "meses",
+    "result_years": "anos",
+    "result_monthly_burn": "Gasto mensal",
+    "result_annual_burn": "Gasto anual",
+    "export_pdf": "Exportar relatório PDF",
+    "expense_rent": "Aluguel / Hipoteca",
+    "expense_food": "Alimentação & Compras",
+    "expense_utilities": "Serviços",
+    "expense_subscriptions": "Assinaturas",
+    "expense_gym": "Academia",
+    "expense_entertainment": "Entretenimento",
+    "expense_clothing": "Roupas",
+    "expense_transport": "Transporte",
+    "expense_essential": "Outros essenciais",
+    "expense_other": "Outros",
+    "debt_car": "Financiamento de carro",
+    "debt_mortgage": "Hipoteca",
+    "debt_creditcard": "Cartão de crédito",
+    "debt_student": "Empréstimo estudantil",
+    "debt_other": "Outra dívida"
+  },
+  "footer": {
+    "tagline": "Pare de adivinhar para onde vai seu dinheiro. Calcule sua autonomia financeira e descubra o custo real das suas assinaturas.",
+    "legal": "Legal",
+    "privacy": "Política de privacidade",
+    "terms": "Termos de serviço",
+    "disclaimer": "Aviso legal",
+    "cookies": "Política de cookies",
+    "social": "Redes sociais",
+    "copyright": "Todos os direitos reservados.",
+    "disclaimer_short": "Este site é apenas para fins informativos e não constitui aconselhamento financeiro."
+  },
+  "lang": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "pt": "Português"
+  }
+}

@@ -1,0 +1,126 @@
+{
+  "nav": {
+    "runway": "Runway",
+    "subscriptions": "Subscriptions"
+  },
+  "hero": {
+    "headline1": "Stop Guessing.",
+    "headline2": "Calculate Your Financial Freedom.",
+    "sub": "Find out exactly how much each watch, listen, or session actually costs you. Is it worth it?"
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "step1_title": "Pick a Subscription",
+    "step1_desc": "Search from 60+ pre-loaded services or enter your own.",
+    "step2_title": "Enter Your Usage",
+    "step2_desc": "How many times per month do you actually use it?",
+    "step3_title": "Get Your Verdict",
+    "step3_desc": "See your real cost-per-use and whether it's worth keeping."
+  },
+  "calculator": {
+    "title": "Calculate Value",
+    "service_label": "1. Service",
+    "service_placeholder": "Search subscription (e.g. Netflix, Gym...)",
+    "cost_label": "2. Cost",
+    "cost_placeholder": "15.99",
+    "billing_label": "Billing",
+    "billing_monthly": "Monthly",
+    "billing_yearly": "Yearly",
+    "usage_label": "3. Uses per Month",
+    "calculate_btn": "Calculate",
+    "calculating_btn": "Calculating...",
+    "reset_btn": "Reset",
+    "no_matches": "No matches found.",
+    "no_matches_hint": "Try searching for a category like \"Music\" or \"Fitness\".",
+    "error_select": "Please select a subscription from the list.",
+    "error_cost": "Please enter a valid cost greater than 0.",
+    "error_usage": "Please enter how many times you use it per month."
+  },
+  "verdict": {
+    "good": "Great Value!",
+    "consider": "Meh, It's Okay",
+    "wasted": "Money Pit",
+    "cost_per_use": "Cost per Use",
+    "monthly_cost": "Monthly Cost",
+    "annual_cost": "Annual Cost",
+    "add_dashboard": "Add to Dashboard",
+    "added": "Added!",
+    "alternatives_title": "Free Alternatives",
+    "tips_title": "Money-Saving Tips"
+  },
+  "reminder": {
+    "title": "Set a Renewal Reminder",
+    "billing_date_label": "Next Billing Date",
+    "days_label": "Remind me",
+    "days_before": "days before",
+    "set_btn": "Set Reminder",
+    "set_success": "Reminder set!",
+    "permission_denied": "Notification permission denied. Please enable it in your browser settings."
+  },
+  "dashboard": {
+    "title": "My Subscription Dashboard",
+    "empty": "No subscriptions added yet. Calculate one above to add it here.",
+    "monthly_total": "Monthly Total",
+    "yearly_total": "Yearly Total",
+    "money_pits": "Money Pits",
+    "remove": "Remove"
+  },
+  "resources": {
+    "title": "Free Alternatives to",
+    "subreddit_label": "Community Tip",
+    "newcomer_tip_label": "New to Reddit?"
+  },
+  "runway": {
+    "toggle_label": "Freedom Runway Calculator",
+    "toggle_sub": "Calculate how long your savings can sustain you",
+    "expand": "Open Calculator",
+    "collapse": "Close",
+    "title": "Freedom Runway Calculator",
+    "income_label": "Monthly Income (after tax)",
+    "income_placeholder": "e.g. 3500",
+    "savings_label": "Liquid Savings",
+    "savings_placeholder": "e.g. 20000",
+    "expenses_title": "Monthly Expenses",
+    "debts_title": "Monthly Debt Payments",
+    "reduction_label": "Expense Reduction Scenario",
+    "safety_buffer_label": "Keep 3-Month Emergency Fund",
+    "result_runway": "Runway",
+    "result_months": "months",
+    "result_years": "years",
+    "result_monthly_burn": "Monthly Burn",
+    "result_annual_burn": "Annual Burn",
+    "export_pdf": "Export PDF Report",
+    "expense_rent": "Rent / Mortgage",
+    "expense_food": "Food & Groceries",
+    "expense_utilities": "Utilities",
+    "expense_subscriptions": "Subscriptions",
+    "expense_gym": "Gym",
+    "expense_entertainment": "Entertainment",
+    "expense_clothing": "Clothing",
+    "expense_transport": "Transport",
+    "expense_essential": "Other Essential",
+    "expense_other": "Other",
+    "debt_car": "Car Loan",
+    "debt_mortgage": "Mortgage",
+    "debt_creditcard": "Credit Card",
+    "debt_student": "Student Loan",
+    "debt_other": "Other Debt"
+  },
+  "footer": {
+    "tagline": "Stop guessing where your money goes. Calculate your financial runway and discover the true cost of your subscriptions with our privacy-first, client-side tools.",
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "disclaimer": "Disclaimer",
+    "cookies": "Cookie Policy",
+    "social": "Social",
+    "copyright": "All rights reserved.",
+    "disclaimer_short": "This site is for informational purposes only and does not constitute financial advice."
+  },
+  "lang": {
+    "en": "English",
+    "fr": "Français",
+    "es": "Español",
+    "pt": "Português"
+  }
+}
