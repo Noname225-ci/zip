@@ -81,6 +81,7 @@ export default function Home() {
   const [result, setResult] = useState<CalculationResult | null>(null);
   const [addedToDashboard, setAddedToDashboard] = useState(false);
   const [runwayOpen, setRunwayOpen] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   const resultsRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -176,34 +177,218 @@ export default function Home() {
   }, [searchTerm]);
 
   const handleShareVerdict = async () => {
-    const card = document.getElementById('verdict-share-card');
-    if (!card) return;
+    if (!result) return;
+
+    const W = 1080, H = 1080;
+    const canvas = document.createElement('canvas');
+    canvas.width = W;
+    canvas.height = H;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    // Background gradient
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, '#0a1628');
+    bg.addColorStop(1, '#0d1e32');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Verdict colour palette
+    const palette = {
+      good:    { glow: '#10b981', border: '#059669', label: '✅ Great Value!',   emoji: '🎉' },
+      consider:{ glow: '#f59e0b', border: '#d97706', label: '⚠️ Meh, It\'s Okay', emoji: '🤔' },
+      wasted:  { glow: '#ef4444', border: '#dc2626', label: '❌ Money Pit',       emoji: '😬' },
+    }[result.verdictClass];
+
+    // Glow blob top-right
+    const glow = ctx.createRadialGradient(W, 0, 0, W, 0, 600);
+    glow.addColorStop(0, palette.glow + '33');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, W, H);
+
+    // Border frame
+    ctx.strokeStyle = palette.border + '66';
+    ctx.lineWidth = 4;
+    const r = 40;
+    ctx.beginPath();
+    ctx.moveTo(r, 2); ctx.lineTo(W - r, 2);
+    ctx.quadraticCurveTo(W - 2, 2, W - 2, r);
+    ctx.lineTo(W - 2, H - r);
+    ctx.quadraticCurveTo(W - 2, H - 2, W - r, H - 2);
+    ctx.lineTo(r, H - 2);
+    ctx.quadraticCurveTo(2, H - 2, 2, H - r);
+    ctx.lineTo(2, r);
+    ctx.quadraticCurveTo(2, 2, r, 2);
+    ctx.closePath();
+    ctx.stroke();
+
+    // Branding top
+    ctx.font = 'bold 32px system-ui, sans-serif';
+    ctx.fillStyle = '#2dd4bf';
+    ctx.textAlign = 'left';
+    ctx.fillText('Wasted', 64, 80);
+    ctx.fillStyle = '#94a3b8';
+    ctx.fillText(' or Worth It?', 64 + ctx.measureText('Wasted').width, 80);
+    ctx.font = '24px system-ui, sans-serif';
+    ctx.fillStyle = '#475569';
+    ctx.fillText('wastedorworthit.com', 64, 116);
+
+    // Service name
+    ctx.font = 'bold 88px system-ui, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = 'center';
+    // Truncate if too long
+    let serviceName = result.sub.name;
+    while (ctx.measureText(serviceName).width > W - 128 && serviceName.length > 6) {
+      serviceName = serviceName.slice(0, -1);
+    }
+    if (serviceName !== result.sub.name) serviceName += '…';
+    ctx.fillText(serviceName, W / 2, 260);
+
+    // Verdict badge pill
+    const verdictText = `${palette.emoji}  ${palette.label.replace(/✅|⚠️|❌/g, '').trim()}`;
+    ctx.font = 'bold 42px system-ui, sans-serif';
+    const vw = ctx.measureText(verdictText).width + 80;
+    const vx = (W - vw) / 2, vy = 300;
+    ctx.fillStyle = palette.glow + '22';
+    ctx.strokeStyle = palette.border;
+    ctx.lineWidth = 2;
+    const pr = 28;
+    ctx.beginPath();
+    ctx.moveTo(vx + pr, vy); ctx.lineTo(vx + vw - pr, vy);
+    ctx.quadraticCurveTo(vx + vw, vy, vx + vw, vy + pr);
+    ctx.lineTo(vx + vw, vy + 70 - pr);
+    ctx.quadraticCurveTo(vx + vw, vy + 70, vx + vw - pr, vy + 70);
+    ctx.lineTo(vx + pr, vy + 70);
+    ctx.quadraticCurveTo(vx, vy + 70, vx, vy + 70 - pr);
+    ctx.lineTo(vx, vy + pr);
+    ctx.quadraticCurveTo(vx, vy, vx + pr, vy);
+    ctx.closePath();
+    ctx.fill(); ctx.stroke();
+    ctx.fillStyle = palette.glow;
+    ctx.textAlign = 'center';
+    ctx.fillText(verdictText, W / 2, vy + 48);
+
+    // ── Stat boxes ──
+    const drawStatBox = (x: number, y: number, w: number, h: number, label: string, value: string, accent: string) => {
+      ctx.fillStyle = '#0d1e32';
+      ctx.strokeStyle = accent + '44';
+      ctx.lineWidth = 2;
+      const br = 20;
+      ctx.beginPath();
+      ctx.moveTo(x + br, y); ctx.lineTo(x + w - br, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + br);
+      ctx.lineTo(x + w, y + h - br);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - br, y + h);
+      ctx.lineTo(x + br, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - br);
+      ctx.lineTo(x, y + br);
+      ctx.quadraticCurveTo(x, y, x + br, y);
+      ctx.closePath();
+      ctx.fill(); ctx.stroke();
+      ctx.font = 'bold 52px system-ui, sans-serif';
+      ctx.fillStyle = accent;
+      ctx.textAlign = 'center';
+      ctx.fillText(value, x + w / 2, y + h / 2 + 10);
+      ctx.font = 'bold 22px system-ui, sans-serif';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText(label.toUpperCase(), x + w / 2, y + h / 2 + 52);
+    };
+
+    const bx = 64, bw = (W - 128 - 32) / 2, bh = 160, by = 430;
+    const costPerUseStr = result.costPerUse === Infinity ? '∞' : formatCurrency(result.costPerUse);
+    drawStatBox(bx,          by, bw, bh, 'Cost per Use',  costPerUseStr,                '#2dd4bf');
+    drawStatBox(bx + bw + 32, by, bw, bh, 'Monthly Cost',  formatCurrency(result.monthlyCost), '#94a3b8');
+
+    const bx2 = 64, bw2 = (W - 128 - 32) / 2, bh2 = 160, by2 = 430 + bh + 28;
+    drawStatBox(bx2,           by2, bw2, bh2, 'Annual Cost', formatCurrency(result.annualCost), '#94a3b8');
+    drawStatBox(bx2 + bw2 + 32, by2, bw2, bh2, 'Uses / Month', `${result.usage}×`,               '#818cf8');
+
+    // ── Viral hook message ──
+    const annualWasted = result.annualCost;
+    let hookLine = '';
+    if (result.verdictClass === 'wasted') {
+      hookLine = `I'm wasting ${formatCurrency(annualWasted)}/year on ${result.sub.name} 😅`;
+    } else if (result.verdictClass === 'consider') {
+      hookLine = `${result.sub.name} is borderline — ${formatCurrency(result.annualCost)}/yr 🤔`;
+    } else {
+      hookLine = `${result.sub.name} is actually worth it at ${formatCurrency(result.costPerUse)}/use 🎉`;
+    }
+
+    // Word-wrap hook line
+    ctx.font = 'bold 36px system-ui, sans-serif';
+    ctx.fillStyle = '#e2e8f0';
+    ctx.textAlign = 'center';
+    const words = hookLine.split(' ');
+    let line = '', hookY = 870;
+    for (const word of words) {
+      const test = line ? line + ' ' + word : word;
+      if (ctx.measureText(test).width > W - 128) {
+        ctx.fillText(line, W / 2, hookY);
+        hookY += 48;
+        line = word;
+      } else { line = test; }
+    }
+    if (line) ctx.fillText(line, W / 2, hookY);
+
+    // Bottom tag
+    ctx.font = '26px system-ui, sans-serif';
+    ctx.fillStyle = '#334155';
+    ctx.textAlign = 'center';
+    ctx.fillText('Check yours free → wastedorworthit.com', W / 2, H - 48);
+
+    // Download
+    canvas.toBlob(blob => {
+      if (!blob) return;
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${result.sub.name.replace(/\s+/g, '-').toLowerCase()}-verdict.png`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }, 'image/png');
+  };
+
+  const getShareText = () => {
+    if (!result) return '';
+    if (result.verdictClass === 'wasted')
+      return `I just found out I'm wasting ${formatCurrency(result.annualCost)}/year on ${result.sub.name} 😅 Check if yours is worth it →`;
+    if (result.verdictClass === 'consider')
+      return `${result.sub.name} is on the fence for me — ${formatCurrency(result.annualCost)}/yr at ${formatCurrency(result.costPerUse)}/use. Is yours worth it? →`;
+    return `${result.sub.name} is actually worth it! Only ${formatCurrency(result.costPerUse)}/use 🎉 Check your subscriptions →`;
+  };
+
+  const shareUrl = 'https://wastedorworthit.com';
+
+  const handleShareTwitter = () => {
+    const text = encodeURIComponent(getShareText() + ' ' + shareUrl);
+    window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank', 'noopener,noreferrer,width=600,height=400');
+  };
+
+  const handleShareFacebook = () => {
+    const url = encodeURIComponent(shareUrl);
+    const quote = encodeURIComponent(getShareText());
+    window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}&quote=${quote}`, '_blank', 'noopener,noreferrer,width=600,height=400');
+  };
+
+  const handleCopyLink = async () => {
     try {
-      const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(card, { backgroundColor: '#0a1628', scale: 2, useCORS: true, logging: false });
-      canvas.toBlob(blob => {
-        if (!blob) {
-          // Fallback: open data URL directly
-          const dataUrl = canvas.toDataURL('image/png');
-          const a = document.createElement('a');
-          a.href = dataUrl;
-          a.download = 'my-subscription-verdict.png';
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          return;
-        }
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'my-subscription-verdict.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(() => URL.revokeObjectURL(url), 1000);
-      }, 'image/png');
-    } catch (e) {
-      console.error('Share card download failed:', e);
+      await navigator.clipboard.writeText(getShareText() + ' ' + shareUrl);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
+    } catch {
+      // fallback
+      const ta = document.createElement('textarea');
+      ta.value = getShareText() + ' ' + shareUrl;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2500);
     }
   };
 
@@ -701,30 +886,81 @@ export default function Home() {
                     </div>
                   </div>
 
-                  {/* ── Share verdict card ── */}
-                  <div id="verdict-share-card" className="bg-[#0a1628] rounded-2xl p-5 border border-slate-700/40">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('verdict.share_title')}</span>
+                  {/* ── Share & Go Viral ── */}
+                  <div className="bg-gradient-to-br from-slate-800/80 to-slate-900/60 rounded-2xl p-5 border border-slate-700/40">
+                    {/* Header */}
+                    <div className="flex items-center gap-2 mb-4">
+                      <div className="w-7 h-7 rounded-lg bg-teal-500/20 flex items-center justify-center shrink-0">
+                        <Download size={14} className="text-teal-400" />
+                      </div>
+                      <span className="text-sm font-bold text-slate-200 uppercase tracking-wider">Share Your Verdict</span>
+                    </div>
+
+                    {/* Mini card preview */}
+                    <div id="verdict-share-card" className={`rounded-xl p-4 mb-4 border-2 relative overflow-hidden
+                      ${result.verdictClass === 'good'    ? 'bg-emerald-950/60 border-emerald-500/40'
+                      : result.verdictClass === 'consider' ? 'bg-amber-950/60 border-amber-500/40'
+                      :                                      'bg-rose-950/60 border-rose-500/40'}`}>
+                      <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">wastedorworthit.com</div>
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <div className="font-display font-bold text-white text-base leading-tight">{result.sub.name}</div>
+                          <div className="text-slate-400 text-xs mt-0.5">{formatCurrency(result.monthlyCost)}/mo · {result.usage}× per month</div>
+                          {result.verdictClass === 'wasted' && (
+                            <div className="text-rose-400 text-xs font-bold mt-1">Wasting {formatCurrency(result.annualCost)}/yr 😅</div>
+                          )}
+                          {result.verdictClass === 'good' && (
+                            <div className="text-emerald-400 text-xs font-bold mt-1">Worth every penny at {formatCurrency(result.costPerUse)}/use 🎉</div>
+                          )}
+                          {result.verdictClass === 'consider' && (
+                            <div className="text-amber-400 text-xs font-bold mt-1">On the fence — use it more or cut it 🤔</div>
+                          )}
+                        </div>
+                        <div className={`text-sm font-bold px-3 py-1.5 rounded-lg border shrink-0
+                          ${result.verdictClass === 'good'    ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                          : result.verdictClass === 'consider' ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                          :                                      'bg-rose-500/15 text-rose-300 border-rose-500/30'}`}>
+                          {result.verdict}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="grid grid-cols-2 gap-2 mb-2">
                       <button
                         onClick={handleShareVerdict}
-                        className="flex items-center gap-1.5 text-xs font-bold text-teal-400 hover:text-teal-300 bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/20 px-3 py-1.5 rounded-lg transition-colors"
+                        className="flex items-center justify-center gap-2 text-xs font-bold text-white bg-teal-600 hover:bg-teal-500 px-3 py-2.5 rounded-xl transition-colors active:scale-95"
                       >
-                        <Download size={13} /> {t('verdict.share_download')}
+                        <Download size={14} /> Download Image
+                      </button>
+                      <button
+                        onClick={handleShareTwitter}
+                        className="flex items-center justify-center gap-2 text-xs font-bold text-white bg-black hover:bg-slate-800 border border-slate-600 px-3 py-2.5 rounded-xl transition-colors active:scale-95"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        Post on X
                       </button>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-display font-bold text-white text-lg">{result.sub.name}</div>
-                        <div className="text-slate-400 text-sm">{formatCurrency(result.monthlyCost)}/mo · {result.usage}× per month</div>
-                      </div>
-                      <div className={`text-sm font-bold px-4 py-2 rounded-xl border
-                        ${result.verdictClass === 'good'    ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                        : result.verdictClass === 'consider' ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
-                        : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}`}>
-                        {result.verdict}
-                      </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        onClick={handleShareFacebook}
+                        className="flex items-center justify-center gap-2 text-xs font-bold text-white bg-[#1877F2] hover:bg-[#1565d8] px-3 py-2.5 rounded-xl transition-colors active:scale-95"
+                      >
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Share on Facebook
+                      </button>
+                      <button
+                        onClick={handleCopyLink}
+                        className={`flex items-center justify-center gap-2 text-xs font-bold px-3 py-2.5 rounded-xl transition-colors active:scale-95 border
+                          ${copiedLink
+                            ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                            : 'bg-slate-700 hover:bg-slate-600 text-slate-200 border-slate-600'}`}
+                      >
+                        {copiedLink
+                          ? <><Check size={14} /> Copied!</>
+                          : <><ChevronRight size={14} /> Copy message</>}
+                      </button>
                     </div>
-                    <div className="mt-3 pt-3 border-t border-slate-700/40 text-[10px] text-slate-600 text-right">wastedorworthit.com</div>
                   </div>
 
                   <ResourcesContent sub={result.sub} />
