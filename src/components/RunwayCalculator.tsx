@@ -241,26 +241,26 @@ export default function RunwayCalculator() {
   return (
     <div className="w-full max-w-5xl mx-auto mb-20">
       <div className="bg-slate-800/50 backdrop-blur-xl rounded-3xl border border-slate-700 overflow-hidden shadow-2xl">
-        <div className="p-8 md:p-10">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
-              <div className="p-3 bg-emerald-500/20 rounded-2xl text-emerald-400">
-                <TrendingUp size={32} />
+        <div className="p-5 sm:p-8 md:p-10">
+          <div className="flex items-center justify-between mb-8 gap-3 flex-wrap">
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-emerald-500/20 rounded-2xl text-emerald-400 shrink-0">
+                <TrendingUp size={28} />
               </div>
               <div>
-                <h2 className="text-3xl md:text-4xl font-display font-bold text-white">Freedom Runway</h2>
-                <p className="text-slate-400 font-medium">How long can you survive without income?</p>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white">Freedom Runway</h2>
+                <p className="text-slate-400 font-medium text-sm sm:text-base">How long can you survive without income?</p>
               </div>
             </div>
             <button
               onClick={handleExport}
-              className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-xl font-bold transition-colors"
+              className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 sm:px-4 rounded-xl font-bold transition-colors text-sm shrink-0"
             >
-              <Download size={18} /> Export PDF
+              <Download size={16} /> <span className="hidden sm:inline">Export PDF</span><span className="sm:hidden">PDF</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10">
             {/* INPUTS COLUMN */}
             <div className="lg:col-span-7 space-y-8">
 
@@ -385,7 +385,7 @@ export default function RunwayCalculator() {
                   <div className="flex flex-col items-center justify-center py-6">
                     <div className="relative">
                       <motion.span
-                        className="text-8xl md:text-9xl font-display font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-indigo-200 tracking-tighter leading-none"
+                        className="text-6xl sm:text-8xl md:text-9xl font-display font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-indigo-200 tracking-tighter leading-none"
                         key={runway.months}
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -401,7 +401,7 @@ export default function RunwayCalculator() {
                         />
                       )}
                     </div>
-                    <span className="text-3xl md:text-4xl font-bold text-indigo-400/80 mt-2 font-display">Months</span>
+                    <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-indigo-400/80 mt-2 font-display">Months</span>
                   </div>
 
                   <div className="text-center mb-8">
@@ -411,7 +411,7 @@ export default function RunwayCalculator() {
                   </div>
 
                   {/* Graph Visualization */}
-                  <div className="relative h-40 w-full mt-4">
+                  <div className="h-36 w-full mt-4">
                     <ResponsiveContainer width="100%" height="100%">
                       <AreaChart data={chartData}>
                         <defs>
@@ -432,10 +432,10 @@ export default function RunwayCalculator() {
                         />
                       </AreaChart>
                     </ResponsiveContainer>
-                    <div className="absolute bottom-0 left-0 right-0 flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-wider px-2 pointer-events-none">
-                      <span>Now</span>
-                      <span>Runway End</span>
-                    </div>
+                  </div>
+                  <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-wider px-1 mt-2">
+                    <span>▶ Now</span>
+                    <span>Runway End ◀</span>
                   </div>
                 </div>
               </div>

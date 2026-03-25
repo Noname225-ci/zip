@@ -4,7 +4,7 @@ import SEO from '../components/SEO';
 
 export default function TermsOfService() {
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white pb-20 pt-24">
+    <div className="min-h-screen bg-[#0a1628] text-slate-100 font-sans selection:bg-teal-500 selection:text-white pb-20 pt-24">
       <SEO
         title="Terms of Service"
         description="Rules and guidelines for using the Wasted or Worth It? calculators and financial tools."
@@ -12,13 +12,13 @@ export default function TermsOfService() {
         canonical="https://wastedorworthit.com/terms"
       />
       <div className="container mx-auto px-4 max-w-3xl">
-        <Link to="/" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 mb-8 font-bold transition-colors">
+        <Link to="/" className="inline-flex items-center gap-2 text-teal-400 hover:text-teal-300 mb-8 font-bold transition-colors">
           <ArrowLeft size={20} /> Back to Calculator
         </Link>
 
         <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 md:p-12 shadow-xl">
           <div className="flex items-center gap-4 mb-8 border-b border-slate-800 pb-8">
-            <div className="bg-indigo-500/20 p-4 rounded-2xl text-indigo-400">
+            <div className="bg-teal-500/20 p-4 rounded-2xl text-teal-400">
               <FileText size={32} />
             </div>
             <h1 className="text-3xl md:text-4xl font-display font-bold text-white">Terms of Service</h1>

@@ -4,7 +4,7 @@ import SEO from '../components/SEO';
 
 export default function PrivacyPolicy() {
   return (
-    <div className="min-h-screen bg-[#0f172a] text-slate-100 font-sans selection:bg-indigo-500 selection:text-white pb-20 pt-24">
+    <div className="min-h-screen bg-[#0a1628] text-slate-100 font-sans selection:bg-teal-500 selection:text-white pb-20 pt-24">
       <SEO
         title="Privacy Policy"
         description="Learn how Wasted or Worth It? protects your financial data. We are a privacy-first platform with no client-side data collection."
@@ -12,13 +12,13 @@ export default function PrivacyPolicy() {
         canonical="https://wastedorworthit.com/privacy"
       />
       <div className="container mx-auto px-4 max-w-3xl">
-        <Link to="/" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 mb-8 font-bold transition-colors">
+        <Link to="/" className="inline-flex items-center gap-2 text-teal-400 hover:text-teal-300 mb-8 font-bold transition-colors">
           <ArrowLeft size={20} /> Back to Calculator
         </Link>
 
         <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-8 md:p-12 shadow-xl">
           <div className="flex items-center gap-4 mb-8 border-b border-slate-800 pb-8">
-            <div className="bg-indigo-500/20 p-4 rounded-2xl text-indigo-400">
+            <div className="bg-teal-500/20 p-4 rounded-2xl text-teal-400">
               <Shield size={32} />
             </div>
             <h1 className="text-3xl md:text-4xl font-display font-bold text-white">Privacy Policy</h1>
@@ -43,10 +43,10 @@ export default function PrivacyPolicy() {
               <p>We use third-party advertising companies, including Google AdSense, to serve ads when you visit our website. These companies may use cookies to serve ads based on your prior visits to our website or other websites.</p>
               <ul className="list-disc pl-6 mt-4 space-y-2">
                 <li>Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our sites and/or other sites on the Internet.</li>
-                <li>You may opt out of personalized advertising by visiting <a href="https://myadcenter.google.com/" className="text-indigo-400 hover:text-indigo-300 underline" target="_blank" rel="noopener noreferrer">Google's Ads Settings</a>.</li>
-                <li>Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="http://www.aboutads.info/choices/" className="text-indigo-400 hover:text-indigo-300 underline" target="_blank" rel="noopener noreferrer">www.aboutads.info</a>.</li>
+                <li>You may opt out of personalized advertising by visiting <a href="https://myadcenter.google.com/" className="text-teal-400 hover:text-teal-300 underline" target="_blank" rel="noopener noreferrer">Google's Ads Settings</a>.</li>
+                <li>Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="http://www.aboutads.info/choices/" className="text-teal-400 hover:text-teal-300 underline" target="_blank" rel="noopener noreferrer">www.aboutads.info</a>.</li>
               </ul>
-              <p className="mt-4">For more detailed information regarding how we handle cookies, please refer to our <Link to="/cookies" className="text-indigo-400 hover:text-indigo-300 underline">Cookie Policy</Link>.</p>
+              <p className="mt-4">For more detailed information regarding how we handle cookies, please refer to our <Link to="/cookies" className="text-teal-400 hover:text-teal-300 underline">Cookie Policy</Link>.</p>
             </section>
 
             <section>
