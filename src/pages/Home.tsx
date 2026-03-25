@@ -1162,7 +1162,7 @@ export default function Home() {
               <p>
                 The math is not complicated. If you pay $15/month for something you use 3 times,
                 each use costs $5. Whether that is a good deal depends entirely on
-                <span className="text-white font-semibold">what you are buying.</span> A gym visit at $5 is a bargain. A Netflix stream at $5 is a waste. We built that distinction in.
+                <span className="text-white font-semibold"> what you are buying.</span> A gym visit at $5 is a bargain. A Netflix stream at $5 is a waste. We built that distinction in.
               </p>
               <p>
                 Everything runs in your browser. No data is sent anywhere.
