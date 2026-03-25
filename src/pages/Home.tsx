@@ -203,19 +203,19 @@ export default function Home() {
 
       if (costPerUse === Infinity) {
         verdict = t('verdict.wasted'); verdictClass = 'wasted';
-        detailMsg = `You're paying ${formatCurrency(monthlyCost)}/mo for nothing. That's ${formatCurrency(annualCost)} a year gone.`;
+        detailMsg = t('verdict.detail_zero', { cost: formatCurrency(monthlyCost), annual: formatCurrency(annualCost) });
         meterPct = 0; showSuggestions = true;
       } else if (costPerUse <= thresholds.good) {
         verdict = t('verdict.good'); verdictClass = 'good';
-        detailMsg = `At ${formatCurrency(costPerUse)} per use, this is a steal. Keep it!`;
+        detailMsg = t('verdict.detail_good', { cost: formatCurrency(costPerUse) });
         meterPct = 100; showSuggestions = false;
       } else if (costPerUse <= thresholds.consider) {
         verdict = t('verdict.consider'); verdictClass = 'consider';
-        detailMsg = `${formatCurrency(costPerUse)} per use is a bit steep. Use it more or find a deal.`;
+        detailMsg = t('verdict.detail_consider', { cost: formatCurrency(costPerUse) });
         meterPct = 50; showSuggestions = true;
       } else {
         verdict = t('verdict.wasted'); verdictClass = 'wasted';
-        detailMsg = `At ${formatCurrency(costPerUse)} per use, you're overpaying. Cancel or downgrade.`;
+        detailMsg = t('verdict.detail_wasted', { cost: formatCurrency(costPerUse) });
         meterPct = 20; showSuggestions = true;
       }
 
@@ -290,7 +290,9 @@ export default function Home() {
           <div className="flex items-center gap-2 sm:gap-3">
             <nav className="hidden md:flex gap-5 text-sm font-semibold text-slate-400 items-center">
               <a href="#calculator" className="hover:text-teal-400 transition-colors">{t('nav.subscriptions')}</a>
-              <a href="#dashboard" className="hover:text-teal-400 transition-colors">{t('nav.dashboard')}</a>
+              {items.length > 0 && (
+                <a href="#dashboard" className="hover:text-teal-400 transition-colors">{t('nav.dashboard')}</a>
+              )}
               <a href="#runway" className="hover:text-teal-400 transition-colors">{t('nav.runway')}</a>
             </nav>
             <LanguageSelector />
@@ -560,13 +562,13 @@ export default function Home() {
                     <MetricCard label={t('verdict.cost_per_use')} value={result.costPerUse === Infinity ? '∞' : formatCurrency(result.costPerUse)} highlight />
                     <MetricCard label={t('verdict.monthly_cost')} value={formatCurrency(result.monthlyCost)} />
                     <MetricCard label={t('verdict.annual_cost')} value={formatCurrency(result.annualCost)} />
-                    <MetricCard label="Daily" value={formatCurrency(result.dailyCost)} />
+                    <MetricCard label={t('verdict.daily')} value={formatCurrency(result.dailyCost)} />
                   </div>
 
                   {/* Financial Insights */}
                   <div className="bg-[#0d1e32] rounded-2xl p-5 border border-slate-700/60 space-y-4">
                     <h4 className="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-                      <TrendingUp size={15} className="text-teal-400" /> Financial Insights
+                      <TrendingUp size={15} className="text-teal-400" /> {t('verdict.insights_title')}
                     </h4>
 
                     {/* Break-even */}
@@ -575,14 +577,14 @@ export default function Home() {
                         <CheckCircle2 size={14} className="text-teal-400" />
                       </div>
                       <p className="text-slate-300 text-sm leading-relaxed">
-                        You need{' '}
-                        <span className="font-bold text-white">{result.breakEvenUses}× per month</span>{' '}
-                        to justify the cost at the "worth it" threshold.
+                        {t('verdict.break_even_needs')}{' '}
+                        <span className="font-bold text-white">{result.breakEvenUses}×</span>{' '}
+                        {t('verdict.break_even_times')}
                         {result.usage > 0 && result.usage < result.breakEvenUses && (
-                          <span className="text-rose-400 font-bold"> You're {result.breakEvenUses - result.usage} short.</span>
+                          <span className="text-rose-400 font-bold"> {t('verdict.break_even_short', { count: result.breakEvenUses - result.usage })}</span>
                         )}
                         {result.usage > 0 && result.usage >= result.breakEvenUses && (
-                          <span className="text-emerald-400 font-bold"> You're there! 🎉</span>
+                          <span className="text-emerald-400 font-bold"> {t('verdict.break_even_good')}</span>
                         )}
                       </p>
                     </div>
@@ -593,9 +595,9 @@ export default function Home() {
                         ☕
                       </div>
                       <p className="text-slate-300 text-sm leading-relaxed">
-                        That's roughly{' '}
-                        <span className="font-bold text-amber-300">{result.lattesPerMonth.toFixed(1)} lattes</span>{' '}
-                        a month at $6.50 each.
+                        {t('verdict.latte_roughly')}{' '}
+                        <span className="font-bold text-amber-300">{result.lattesPerMonth.toFixed(1)}</span>{' '}
+                        {t('verdict.latte_unit')}
                       </p>
                     </div>
 
@@ -606,10 +608,10 @@ export default function Home() {
                           💰
                         </div>
                         <p className="text-slate-300 text-sm leading-relaxed">
-                          Cancel and save{' '}
-                          <span className="font-bold text-emerald-400">{formatCurrency(result.savingsProjection.yr1)}</span> this year,{' '}
-                          <span className="font-bold text-emerald-400">{formatCurrency(result.savingsProjection.yr3)}</span> over 3 years,{' '}
-                          <span className="font-bold text-emerald-400">{formatCurrency(result.savingsProjection.yr5)}</span> over 5 years.
+                          {t('verdict.cancel_pre')}{' '}
+                          <span className="font-bold text-emerald-400">{formatCurrency(result.savingsProjection.yr1)}</span> {t('verdict.cancel_this_year')}{' '}
+                          <span className="font-bold text-emerald-400">{formatCurrency(result.savingsProjection.yr3)}</span> {t('verdict.cancel_3yr')}{' '}
+                          <span className="font-bold text-emerald-400">{formatCurrency(result.savingsProjection.yr5)}</span> {t('verdict.cancel_5yr')}
                         </p>
                       </div>
                     )}
@@ -651,7 +653,7 @@ export default function Home() {
                             : 'bg-teal-500 hover:bg-teal-400 text-white border-transparent shadow-md'}`}
                       >
                         <Bell size={17} />
-                        {isReminderSet ? 'Reminder Saved' : t('reminder.set_btn')}
+                        {isReminderSet ? t('reminder.saved') : t('reminder.set_btn')}
                       </button>
                     </div>
                   </div>
@@ -672,7 +674,7 @@ export default function Home() {
                   <div className="absolute top-0 right-0 p-4 opacity-10 text-teal-400"><Bell size={80} /></div>
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs font-bold text-teal-400 uppercase tracking-wider flex items-center gap-1"><Bell size={12} /> Active Reminder</span>
+                      <span className="text-xs font-bold text-teal-400 uppercase tracking-wider flex items-center gap-1"><Bell size={12} /> {t('reminder.active')}</span>
                       <button onClick={clearReminder} aria-label="Clear reminder" className="text-slate-500 hover:text-rose-400 transition-colors">
                         <XCircle size={16} />
                       </button>
@@ -682,7 +684,7 @@ export default function Home() {
                       {new Date(billingDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                     </div>
                     <p className="text-sm text-slate-400 font-medium">
-                      Renews in {Math.ceil((new Date(billingDate).getTime() - Date.now()) / 86400000)} days
+                      {t('reminder.renews_in', { days: Math.ceil((new Date(billingDate).getTime() - Date.now()) / 86400000) })}
                     </p>
                   </div>
                 </motion.div>
@@ -693,19 +695,19 @@ export default function Home() {
             <div className="bg-[#0d1e32] rounded-3xl p-6 border border-slate-700/60 shadow-xl space-y-4">
               <div className="flex items-center gap-3 mb-1">
                 <BarChart3 className="text-teal-400" />
-                <h3 className="font-display font-bold text-xl text-white">Did You Know?</h3>
+                <h3 className="font-display font-bold text-xl text-white">{t('sidebar.did_you_know')}</h3>
               </div>
               <div className="bg-teal-500/10 p-4 rounded-2xl border border-teal-500/20">
                 <div className="text-3xl font-display font-bold text-teal-400 mb-0.5">{formatCurrency(273)}</div>
-                <div className="text-xs font-bold text-teal-200/80 uppercase tracking-wide">Avg. Monthly Subs</div>
+                <div className="text-xs font-bold text-teal-200/80 uppercase tracking-wide">{t('sidebar.avg_monthly')}</div>
               </div>
               <div className="bg-purple-500/10 p-4 rounded-2xl border border-purple-500/20">
                 <div className="text-3xl font-display font-bold text-purple-400 mb-0.5">42%</div>
-                <div className="text-xs font-bold text-purple-200/80 uppercase tracking-wide">Unused Subs</div>
+                <div className="text-xs font-bold text-purple-200/80 uppercase tracking-wide">{t('sidebar.unused')}</div>
               </div>
               <div className="bg-amber-500/10 p-4 rounded-2xl border border-amber-500/20">
                 <div className="text-3xl font-display font-bold text-amber-400 mb-0.5">{formatCurrency(3276)}</div>
-                <div className="text-xs font-bold text-amber-200/80 uppercase tracking-wide">Potential Yearly Savings</div>
+                <div className="text-xs font-bold text-amber-200/80 uppercase tracking-wide">{t('sidebar.potential_savings')}</div>
               </div>
             </div>
 
@@ -713,10 +715,10 @@ export default function Home() {
             <div className="sticky top-24 bg-[#0d1e32] rounded-3xl p-5 border border-slate-700/60">
               <div className="flex items-center gap-2 mb-3 text-amber-400">
                 <Lightbulb size={18} />
-                <h4 className="font-bold text-sm uppercase tracking-wider">Quick Tip</h4>
+                <h4 className="font-bold text-sm uppercase tracking-wider">{t('sidebar.quick_tip')}</h4>
               </div>
               <p className="text-slate-300 text-sm leading-relaxed">
-                Set a reminder 3 days before any free trial ends. Companies count on you forgetting!
+                {t('sidebar.quick_tip_text')}
               </p>
             </div>
           </div>
@@ -802,7 +804,7 @@ function SubscriptionDashboard() {
         </div>
         <div>
           <h2 className="text-2xl font-display font-bold text-white">{t('dashboard.title')}</h2>
-          <p className="text-sm text-slate-400">{items.length} subscription{items.length !== 1 ? 's' : ''} tracked</p>
+          <p className="text-sm text-slate-400">{items.length === 1 ? t('dashboard.subtitle_one', { count: 1 }) : t('dashboard.subtitle_other', { count: items.length })}</p>
         </div>
       </div>
 
@@ -822,7 +824,7 @@ function SubscriptionDashboard() {
         </div>
         <div className="bg-[#0d1e32] rounded-2xl p-4 border border-emerald-500/20 text-center">
           <div className="text-2xl font-display font-bold text-emerald-400">{formatCurrency(moneyPitSavings)}</div>
-          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Saveable / Year</div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">{t('dashboard.saveable_yearly')}</div>
         </div>
       </div>
 

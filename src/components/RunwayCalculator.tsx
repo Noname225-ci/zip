@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { motion } from 'motion/react';
 import {
   Wallet, PiggyBank, TrendingUp, ShieldCheck, Percent,
@@ -14,6 +15,7 @@ import { secureStorage } from '../utils/secureStorage';
 const STORAGE_KEY = 'runway_calculator_data';
 
 export default function RunwayCalculator() {
+  const { t } = useTranslation();
   const { currency, formatCurrency } = useCurrency();
 
   // Load initial state from localStorage or use defaults
@@ -228,7 +230,7 @@ export default function RunwayCalculator() {
     if (active && payload && payload.length) {
       return (
         <div className="bg-slate-900 border border-slate-700 p-3 rounded-lg shadow-xl">
-          <p className="text-slate-400 text-xs font-bold mb-1">Month {label}</p>
+          <p className="text-slate-400 text-xs font-bold mb-1">{t('runway.month_tooltip', { n: label })}</p>
           <p className="text-emerald-400 font-bold text-sm">
             {formatCurrency(payload[0].value)}
           </p>
@@ -248,15 +250,15 @@ export default function RunwayCalculator() {
                 <TrendingUp size={28} />
               </div>
               <div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white">Freedom Runway</h2>
-                <p className="text-slate-400 font-medium text-sm sm:text-base">How long can you survive without income?</p>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-white">{t('runway.title')}</h2>
+                <p className="text-slate-400 font-medium text-sm sm:text-base">{t('runway.survive')}</p>
               </div>
             </div>
             <button
               onClick={handleExport}
               className="flex items-center gap-2 bg-slate-700 hover:bg-slate-600 text-white px-3 py-2 sm:px-4 rounded-xl font-bold transition-colors text-sm shrink-0"
             >
-              <Download size={16} /> <span className="hidden sm:inline">Export PDF</span><span className="sm:hidden">PDF</span>
+              <Download size={16} /> <span className="hidden sm:inline">{t('runway.export_pdf')}</span><span className="sm:hidden">PDF</span>
             </button>
           </div>
 
@@ -267,11 +269,11 @@ export default function RunwayCalculator() {
               {/* 1. Assets & Income */}
               <div className="space-y-4">
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                  <Wallet size={16} /> Assets & Income
+                  <Wallet size={16} /> {t('runway.assets_section')}
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-700 focus-within:border-indigo-500 transition-colors">
-                    <label className="block text-xs font-bold text-slate-500 mb-1">Total Liquid Savings</label>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">{t('runway.total_liquid')}</label>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-400 font-bold text-lg">{currency.symbol}</span>
                       <input
@@ -285,12 +287,12 @@ export default function RunwayCalculator() {
                     </div>
                   </div>
                   <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-700 focus-within:border-indigo-500 transition-colors">
-                    <label className="block text-xs font-bold text-slate-500 mb-1">Monthly Income (Net)</label>
+                    <label className="block text-xs font-bold text-slate-500 mb-1">{t('runway.monthly_income_net')}</label>
                     <div className="flex items-center gap-2">
                       <span className="text-slate-400 font-bold text-lg">{currency.symbol}</span>
                       <input
                         type="number"
-                        placeholder="Optional"
+                        placeholder={t('runway.income_optional')}
                         className="bg-transparent min-w-0 w-full text-xl font-bold text-white outline-none placeholder:text-slate-700 py-1"
                         value={income}
                         onChange={e => setIncome(e.target.value)}
@@ -304,19 +306,19 @@ export default function RunwayCalculator() {
               {/* 2. Monthly Expenses */}
               <div className="space-y-4">
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                  <ShoppingBag size={16} /> Monthly Expenses
+                  <ShoppingBag size={16} /> {t('runway.expenses_title')}
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {[
-                    { key: 'rent', label: 'Rent/Mortgage', icon: Home },
-                    { key: 'food', label: 'Food & Dining', icon: Utensils },
-                    { key: 'utilities', label: 'Utilities', icon: Zap },
-                    { key: 'subscriptions', label: 'Subscriptions', icon: Activity },
-                    { key: 'gym', label: 'Gym/Health', icon: Activity },
-                    { key: 'transport', label: 'Transport', icon: Car },
-                    { key: 'entertainment', label: 'Fun/Party', icon: Smile },
-                    { key: 'clothing', label: 'Clothing', icon: ShoppingBag },
-                    { key: 'essential', label: 'Other Essentials', icon: AlertCircle },
+                    { key: 'rent', label: t('runway.expense_rent'), icon: Home },
+                    { key: 'food', label: t('runway.expense_food'), icon: Utensils },
+                    { key: 'utilities', label: t('runway.expense_utilities'), icon: Zap },
+                    { key: 'subscriptions', label: t('runway.expense_subscriptions'), icon: Activity },
+                    { key: 'gym', label: t('runway.expense_gym'), icon: Activity },
+                    { key: 'transport', label: t('runway.expense_transport'), icon: Car },
+                    { key: 'entertainment', label: t('runway.expense_entertainment'), icon: Smile },
+                    { key: 'clothing', label: t('runway.expense_clothing'), icon: ShoppingBag },
+                    { key: 'essential', label: t('runway.expense_essential'), icon: AlertCircle },
                   ].map((item) => (
                     <div key={item.key} className="bg-slate-900/50 p-3 rounded-xl border border-slate-700/50 focus-within:border-indigo-500/50 transition-colors">
                       <label className="flex items-center gap-2 text-[10px] font-bold text-slate-500 mb-1 uppercase">
@@ -341,14 +343,14 @@ export default function RunwayCalculator() {
               {/* 3. Debts & Loans */}
               <div className="space-y-4">
                 <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                  <CreditCard size={16} /> Debt Payments (Monthly)
+                  <CreditCard size={16} /> {t('runway.debt_section')}
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {[
-                    { key: 'car', label: 'Car Loan' },
-                    { key: 'studentLoan', label: 'Student Loan' },
-                    { key: 'creditCard', label: 'Credit Card' },
-                    { key: 'other', label: 'Other Debt' },
+                    { key: 'car', label: t('runway.debt_car') },
+                    { key: 'studentLoan', label: t('runway.debt_student') },
+                    { key: 'creditCard', label: t('runway.debt_creditcard') },
+                    { key: 'other', label: t('runway.debt_other') },
                   ].map((item) => (
                     <div key={item.key} className="bg-slate-900/50 p-3 rounded-xl border border-slate-700/50 focus-within:border-rose-500/50 transition-colors">
                       <label className="block text-[10px] font-bold text-slate-500 mb-1 uppercase">{item.label}</label>
@@ -379,7 +381,7 @@ export default function RunwayCalculator() {
 
                 <div className="relative z-10">
                   <h3 className="text-indigo-300 font-bold uppercase tracking-widest text-xs mb-6 flex items-center gap-2">
-                    <TrendingUp size={16} /> Your Freedom Runway
+                    <TrendingUp size={16} /> {t('runway.freedom_runway_card')}
                   </h3>
 
                   <div className="flex flex-col items-center justify-center py-6">
@@ -401,12 +403,12 @@ export default function RunwayCalculator() {
                         />
                       )}
                     </div>
-                    <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-indigo-400/80 mt-2 font-display">Months</span>
+                    <span className="text-2xl sm:text-3xl md:text-4xl font-bold text-indigo-400/80 mt-2 font-display">{t('runway.months_label')}</span>
                   </div>
 
                   <div className="text-center mb-8">
                     <p className="text-slate-400 font-medium text-lg">
-                      {runway.years === 99 ? 'Financial Freedom Achieved' : `That's approximately ${runway.years.toFixed(1)} Years of freedom.`}
+                      {runway.years === 99 ? t('runway.infinite_msg') : t('runway.years_msg', { years: runway.years.toFixed(1) })}
                     </p>
                   </div>
 
@@ -434,8 +436,8 @@ export default function RunwayCalculator() {
                     </ResponsiveContainer>
                   </div>
                   <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-wider px-1 mt-2">
-                    <span>▶ Now</span>
-                    <span>Runway End ◀</span>
+                    <span>{t('runway.now_label')}</span>
+                    <span>{t('runway.runway_end_label')}</span>
                   </div>
                 </div>
               </div>
@@ -447,7 +449,7 @@ export default function RunwayCalculator() {
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <label htmlFor="expense-reduction-slider" className="text-sm font-bold text-slate-300 flex items-center gap-2">
-                      <Percent size={16} className="text-indigo-400" /> "What If" I cut expenses?
+                      <Percent size={16} className="text-indigo-400" /> {t('runway.what_if')}
                     </label>
                     <span className="text-indigo-400 font-bold bg-indigo-400/10 px-3 py-1 rounded-lg text-sm">
                       -{expenseReduction}%
@@ -466,7 +468,7 @@ export default function RunwayCalculator() {
                     />
                   </div>
                   <p className="text-xs text-slate-500">
-                    Reduces discretionary spending (Food, Subs, Entertainment, etc.) by {expenseReduction}%.
+                    {t('runway.reduction_desc', { pct: expenseReduction })}
                   </p>
                 </div>
 
@@ -475,10 +477,10 @@ export default function RunwayCalculator() {
                   <div className="space-y-1">
                     <label className="text-sm font-bold text-slate-300 flex items-center gap-2">
                       <ShieldCheck size={16} className={safetyBuffer ? "text-emerald-400" : "text-slate-500"} />
-                      Safety Buffer
+                      {t('runway.safety_buffer_label')}
                     </label>
                     <p className="text-xs text-slate-500 max-w-[200px]">
-                      Lock 3 months of expenses as "untouchable" emergency fund.
+                      {t('runway.safety_buffer_desc')}
                     </p>
                   </div>
                   <button
@@ -493,22 +495,22 @@ export default function RunwayCalculator() {
               {/* Summary Stats */}
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700">
-                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Monthly Burn</div>
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">{t('runway.result_monthly_burn')}</div>
                   <div className="text-xl font-bold text-white break-all">{formatCurrency(adjustedExpenses)}</div>
                   {expenseReduction > 0 && (
                     <div className="text-xs text-emerald-400 font-bold mt-1 break-all">
-                      Saved {formatCurrency(totalExpenses - adjustedExpenses)}
+                      {t('runway.saved_label', { amount: formatCurrency(totalExpenses - adjustedExpenses) })}
                     </div>
                   )}
                 </div>
                 <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700">
-                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Available Cash</div>
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">{t('runway.available_cash')}</div>
                   <div className="text-xl font-bold text-white break-all">
                     {formatCurrency(Math.max(0, (parseFloat(savings) || 0) - (safetyBuffer ? adjustedExpenses * 3 : 0)))}
                   </div>
                   {safetyBuffer && (
                     <div className="text-xs text-slate-500 font-bold mt-1 flex items-center gap-1 break-all">
-                      <Lock size={10} className="shrink-0" /> {formatCurrency(adjustedExpenses * 3)} locked
+                      <Lock size={10} className="shrink-0" /> {formatCurrency(adjustedExpenses * 3)} {t('runway.locked_label')}
                     </div>
                   )}
                 </div>
