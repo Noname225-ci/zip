@@ -176,167 +176,175 @@ export default function Home() {
     setFilteredSubs(results);
   }, [searchTerm]);
 
+  // Shared canvas helpers
+  const drawRoundRect = (ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) => {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r); ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h); ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r); ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  };
+
+  const truncateText = (ctx: CanvasRenderingContext2D, text: string, maxW: number) => {
+    if (ctx.measureText(text).width <= maxW) return text;
+    let t = text;
+    while (ctx.measureText(t + '…').width > maxW && t.length > 2) t = t.slice(0, -1);
+    return t + '…';
+  };
+
+  const wrapText = (ctx: CanvasRenderingContext2D, text: string, maxW: number): string[] => {
+    const words = text.split(' ');
+    const lines: string[] = [];
+    let cur = '';
+    for (const w of words) {
+      const test = cur ? cur + ' ' + w : w;
+      if (ctx.measureText(test).width > maxW) { if (cur) lines.push(cur); cur = w; }
+      else cur = test;
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  };
+
   const handleShareVerdict = async () => {
     if (!result) return;
 
-    const W = 1080, H = 1080;
+    // ── 1200×630 landscape — optimal for Twitter/Facebook/OG; stack as carousel for Instagram ──
+    const W = 1200, H = 630;
+    const PAD = 56;
     const canvas = document.createElement('canvas');
-    canvas.width = W;
-    canvas.height = H;
+    canvas.width = W; canvas.height = H;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    // Background gradient
-    const bg = ctx.createLinearGradient(0, 0, W, H);
-    bg.addColorStop(0, '#0a1628');
-    bg.addColorStop(1, '#0d1e32');
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, W, H);
-
-    // Verdict colour palette
-    const palette = {
-      good:    { glow: '#10b981', border: '#059669', label: '✅ Great Value!',   emoji: '🎉' },
-      consider:{ glow: '#f59e0b', border: '#d97706', label: '⚠️ Meh, It\'s Okay', emoji: '🤔' },
-      wasted:  { glow: '#ef4444', border: '#dc2626', label: '❌ Money Pit',       emoji: '😬' },
+    const pal = {
+      good:    { glow: '#10b981', dim: '#052e16', border: '#059669', badge: '✅ Great Value!',    hook: (n:string, cpu:string, _a:string) => `${n} is worth every penny at ${cpu}/use 🎉` },
+      consider:{ glow: '#f59e0b', dim: '#1c1500', border: '#d97706', badge: '⚠️ It\'s Borderline', hook: (n:string, _c:string, a:string) => `Is ${n} worth ${a}/year? Borderline for me 🤔` },
+      wasted:  { glow: '#ef4444', dim: '#1c0000', border: '#dc2626', badge: '❌ Money Pit',        hook: (_n:string, _c:string, a:string) => `I\'m leaking ${a}/year on this subscription 😅` },
     }[result.verdictClass];
 
-    // Glow blob top-right
-    const glow = ctx.createRadialGradient(W, 0, 0, W, 0, 600);
-    glow.addColorStop(0, palette.glow + '33');
-    glow.addColorStop(1, 'transparent');
-    ctx.fillStyle = glow;
+    const costPerUseStr = result.costPerUse === Infinity ? '∞' : formatCurrency(result.costPerUse);
+    const annualStr = formatCurrency(result.annualCost);
+
+    // ── Background ──
+    const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+    bgGrad.addColorStop(0, '#080e1a');
+    bgGrad.addColorStop(1, '#0d1e32');
+    ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, W, H);
 
-    // Border frame
-    ctx.strokeStyle = palette.border + '66';
-    ctx.lineWidth = 4;
-    const r = 40;
-    ctx.beginPath();
-    ctx.moveTo(r, 2); ctx.lineTo(W - r, 2);
-    ctx.quadraticCurveTo(W - 2, 2, W - 2, r);
-    ctx.lineTo(W - 2, H - r);
-    ctx.quadraticCurveTo(W - 2, H - 2, W - r, H - 2);
-    ctx.lineTo(r, H - 2);
-    ctx.quadraticCurveTo(2, H - 2, 2, H - r);
-    ctx.lineTo(2, r);
-    ctx.quadraticCurveTo(2, 2, r, 2);
-    ctx.closePath();
+    // Accent glow blobs
+    const g1 = ctx.createRadialGradient(W * 0.85, H * 0.15, 0, W * 0.85, H * 0.15, 380);
+    g1.addColorStop(0, pal.glow + '28'); g1.addColorStop(1, 'transparent');
+    ctx.fillStyle = g1; ctx.fillRect(0, 0, W, H);
+
+    const g2 = ctx.createRadialGradient(W * 0.1, H * 0.85, 0, W * 0.1, H * 0.85, 280);
+    g2.addColorStop(0, pal.glow + '14'); g2.addColorStop(1, 'transparent');
+    ctx.fillStyle = g2; ctx.fillRect(0, 0, W, H);
+
+    // Outer border
+    ctx.strokeStyle = pal.border + '55'; ctx.lineWidth = 3;
+    drawRoundRect(ctx, 2, 2, W - 4, H - 4, 28);
     ctx.stroke();
 
-    // Branding top
-    ctx.font = 'bold 32px system-ui, sans-serif';
-    ctx.fillStyle = '#2dd4bf';
-    ctx.textAlign = 'left';
-    ctx.fillText('Wasted', 64, 80);
-    ctx.fillStyle = '#94a3b8';
-    ctx.fillText(' or Worth It?', 64 + ctx.measureText('Wasted').width, 80);
-    ctx.font = '24px system-ui, sans-serif';
-    ctx.fillStyle = '#475569';
-    ctx.fillText('wastedorworthit.com', 64, 116);
+    // ── LEFT COLUMN (service name + verdict badge + hook) ──
+    const leftW = 520;
 
-    // Service name
-    ctx.font = 'bold 88px system-ui, sans-serif';
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'center';
-    // Truncate if too long
-    let serviceName = result.sub.name;
-    while (ctx.measureText(serviceName).width > W - 128 && serviceName.length > 6) {
-      serviceName = serviceName.slice(0, -1);
-    }
-    if (serviceName !== result.sub.name) serviceName += '…';
-    ctx.fillText(serviceName, W / 2, 260);
+    // Brand
+    ctx.font = 'bold 22px system-ui, sans-serif';
+    ctx.fillStyle = '#2dd4bf'; ctx.textAlign = 'left';
+    ctx.fillText('Wasted', PAD, PAD + 18);
+    const wW = ctx.measureText('Wasted').width;
+    ctx.fillStyle = '#64748b';
+    ctx.fillText(' or Worth It?', PAD + wW, PAD + 18);
+
+    // Service name — big
+    ctx.font = 'bold 72px system-ui, sans-serif';
+    ctx.fillStyle = '#ffffff'; ctx.textAlign = 'left';
+    const sName = truncateText(ctx, result.sub.name, leftW - PAD);
+    ctx.fillText(sName, PAD, PAD + 110);
+
+    // Category chip
+    ctx.font = 'bold 20px system-ui, sans-serif';
+    ctx.fillStyle = '#475569';
+    ctx.fillText(result.sub.category.toUpperCase(), PAD, PAD + 145);
 
     // Verdict badge pill
-    const verdictText = `${palette.emoji}  ${palette.label.replace(/✅|⚠️|❌/g, '').trim()}`;
-    ctx.font = 'bold 42px system-ui, sans-serif';
-    const vw = ctx.measureText(verdictText).width + 80;
-    const vx = (W - vw) / 2, vy = 300;
-    ctx.fillStyle = palette.glow + '22';
-    ctx.strokeStyle = palette.border;
-    ctx.lineWidth = 2;
-    const pr = 28;
-    ctx.beginPath();
-    ctx.moveTo(vx + pr, vy); ctx.lineTo(vx + vw - pr, vy);
-    ctx.quadraticCurveTo(vx + vw, vy, vx + vw, vy + pr);
-    ctx.lineTo(vx + vw, vy + 70 - pr);
-    ctx.quadraticCurveTo(vx + vw, vy + 70, vx + vw - pr, vy + 70);
-    ctx.lineTo(vx + pr, vy + 70);
-    ctx.quadraticCurveTo(vx, vy + 70, vx, vy + 70 - pr);
-    ctx.lineTo(vx, vy + pr);
-    ctx.quadraticCurveTo(vx, vy, vx + pr, vy);
-    ctx.closePath();
+    ctx.font = 'bold 26px system-ui, sans-serif';
+    const badgeText = pal.badge;
+    const badgeW = ctx.measureText(badgeText).width + 48;
+    const badgeX = PAD, badgeY = PAD + 172, badgeH = 52;
+    ctx.fillStyle = pal.dim;
+    ctx.strokeStyle = pal.border + 'aa'; ctx.lineWidth = 2;
+    drawRoundRect(ctx, badgeX, badgeY, badgeW, badgeH, badgeH / 2);
     ctx.fill(); ctx.stroke();
-    ctx.fillStyle = palette.glow;
-    ctx.textAlign = 'center';
-    ctx.fillText(verdictText, W / 2, vy + 48);
+    ctx.fillStyle = pal.glow; ctx.textAlign = 'left';
+    ctx.fillText(badgeText, badgeX + 24, badgeY + 34);
 
-    // ── Stat boxes ──
-    const drawStatBox = (x: number, y: number, w: number, h: number, label: string, value: string, accent: string) => {
-      ctx.fillStyle = '#0d1e32';
-      ctx.strokeStyle = accent + '44';
-      ctx.lineWidth = 2;
-      const br = 20;
-      ctx.beginPath();
-      ctx.moveTo(x + br, y); ctx.lineTo(x + w - br, y);
-      ctx.quadraticCurveTo(x + w, y, x + w, y + br);
-      ctx.lineTo(x + w, y + h - br);
-      ctx.quadraticCurveTo(x + w, y + h, x + w - br, y + h);
-      ctx.lineTo(x + br, y + h);
-      ctx.quadraticCurveTo(x, y + h, x, y + h - br);
-      ctx.lineTo(x, y + br);
-      ctx.quadraticCurveTo(x, y, x + br, y);
-      ctx.closePath();
+    // Hook line (viral copy) — word-wrapped
+    ctx.font = '500 28px system-ui, sans-serif';
+    ctx.fillStyle = '#cbd5e1'; ctx.textAlign = 'left';
+    const hookStr = pal.hook(result.sub.name, costPerUseStr, annualStr);
+    const hookLines = wrapText(ctx, hookStr, leftW - PAD);
+    hookLines.forEach((ln, i) => ctx.fillText(ln, PAD, PAD + 270 + i * 40));
+
+    // URL
+    ctx.font = '20px system-ui, sans-serif';
+    ctx.fillStyle = '#334155';
+    ctx.fillText('wastedorworthit.com', PAD, H - PAD);
+
+    // ── DIVIDER ──
+    const divX = leftW + 16;
+    ctx.strokeStyle = pal.border + '22'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(divX, PAD); ctx.lineTo(divX, H - PAD); ctx.stroke();
+
+    // ── RIGHT COLUMN — 3-column stat grid ──
+    const rightX = divX + 32;
+    const rightW = W - rightX - PAD;
+
+    // Helper: draw one stat cell
+    const drawStat = (x: number, y: number, w: number, h: number, label: string, value: string, accent: string) => {
+      // Card bg
+      ctx.fillStyle = '#0d1e32cc';
+      ctx.strokeStyle = accent + '33'; ctx.lineWidth = 1.5;
+      drawRoundRect(ctx, x, y, w, h, 16);
       ctx.fill(); ctx.stroke();
-      ctx.font = 'bold 52px system-ui, sans-serif';
-      ctx.fillStyle = accent;
-      ctx.textAlign = 'center';
-      ctx.fillText(value, x + w / 2, y + h / 2 + 10);
-      ctx.font = 'bold 22px system-ui, sans-serif';
-      ctx.fillStyle = '#64748b';
-      ctx.fillText(label.toUpperCase(), x + w / 2, y + h / 2 + 52);
+
+      // Value
+      ctx.font = `bold ${value.length > 7 ? 32 : 38}px system-ui, sans-serif`;
+      ctx.fillStyle = accent; ctx.textAlign = 'center';
+      ctx.fillText(truncateText(ctx, value, w - 16), x + w / 2, y + h / 2 + 4);
+
+      // Label
+      ctx.font = 'bold 14px system-ui, sans-serif';
+      ctx.fillStyle = '#475569';
+      ctx.fillText(label.toUpperCase(), x + w / 2, y + h / 2 + 26);
     };
 
-    const bx = 64, bw = (W - 128 - 32) / 2, bh = 160, by = 430;
-    const costPerUseStr = result.costPerUse === Infinity ? '∞' : formatCurrency(result.costPerUse);
-    drawStatBox(bx,          by, bw, bh, 'Cost per Use',  costPerUseStr,                '#2dd4bf');
-    drawStatBox(bx + bw + 32, by, bw, bh, 'Monthly Cost',  formatCurrency(result.monthlyCost), '#94a3b8');
+    // 3 stats top row
+    const cols = 3, gap = 14;
+    const cellW = (rightW - gap * (cols - 1)) / cols;
+    const cellH = (H - PAD * 2 - gap) / 2;
 
-    const bx2 = 64, bw2 = (W - 128 - 32) / 2, bh2 = 160, by2 = 430 + bh + 28;
-    drawStatBox(bx2,           by2, bw2, bh2, 'Annual Cost', formatCurrency(result.annualCost), '#94a3b8');
-    drawStatBox(bx2 + bw2 + 32, by2, bw2, bh2, 'Uses / Month', `${result.usage}×`,               '#818cf8');
+    drawStat(rightX,                  PAD,            cellW, cellH, 'Cost per Use',   costPerUseStr,                    '#2dd4bf');
+    drawStat(rightX + cellW + gap,    PAD,            cellW, cellH, 'Monthly Cost',   formatCurrency(result.monthlyCost), '#94a3b8');
+    drawStat(rightX + (cellW+gap)*2,  PAD,            cellW, cellH, 'Annual Cost',    annualStr,                          result.verdictClass === 'wasted' ? '#f87171' : '#94a3b8');
+    drawStat(rightX,                  PAD+cellH+gap,  cellW, cellH, 'Times Used/mo',  `${result.usage}×`,                 '#818cf8');
+    drawStat(rightX + cellW + gap,    PAD+cellH+gap,  cellW, cellH, 'Daily Cost',     formatCurrency(result.dailyCost),   '#64748b');
 
-    // ── Viral hook message ──
-    const annualWasted = result.annualCost;
-    let hookLine = '';
-    if (result.verdictClass === 'wasted') {
-      hookLine = `I'm wasting ${formatCurrency(annualWasted)}/year on ${result.sub.name} 😅`;
-    } else if (result.verdictClass === 'consider') {
-      hookLine = `${result.sub.name} is borderline — ${formatCurrency(result.annualCost)}/yr 🤔`;
-    } else {
-      hookLine = `${result.sub.name} is actually worth it at ${formatCurrency(result.costPerUse)}/use 🎉`;
-    }
-
-    // Word-wrap hook line
-    ctx.font = 'bold 36px system-ui, sans-serif';
-    ctx.fillStyle = '#e2e8f0';
-    ctx.textAlign = 'center';
-    const words = hookLine.split(' ');
-    let line = '', hookY = 870;
-    for (const word of words) {
-      const test = line ? line + ' ' + word : word;
-      if (ctx.measureText(test).width > W - 128) {
-        ctx.fillText(line, W / 2, hookY);
-        hookY += 48;
-        line = word;
-      } else { line = test; }
-    }
-    if (line) ctx.fillText(line, W / 2, hookY);
-
-    // Bottom tag
-    ctx.font = '26px system-ui, sans-serif';
-    ctx.fillStyle = '#334155';
-    ctx.textAlign = 'center';
-    ctx.fillText('Check yours free → wastedorworthit.com', W / 2, H - 48);
+    // 6th cell: verdict colour block
+    const v6x = rightX + (cellW+gap)*2, v6y = PAD + cellH + gap;
+    ctx.fillStyle = pal.dim;
+    ctx.strokeStyle = pal.border + '66'; ctx.lineWidth = 2;
+    drawRoundRect(ctx, v6x, v6y, cellW, cellH, 16);
+    ctx.fill(); ctx.stroke();
+    ctx.font = 'bold 16px system-ui, sans-serif';
+    ctx.fillStyle = pal.glow; ctx.textAlign = 'center';
+    ctx.fillText('VERDICT', v6x + cellW / 2, v6y + cellH / 2 - 10);
+    ctx.font = 'bold 22px system-ui, sans-serif';
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(result.verdict, v6x + cellW / 2, v6y + cellH / 2 + 18);
 
     // Download
     canvas.toBlob(blob => {
@@ -902,18 +910,35 @@ export default function Home() {
                       : result.verdictClass === 'consider' ? 'bg-amber-950/60 border-amber-500/40'
                       :                                      'bg-rose-950/60 border-rose-500/40'}`}>
                       <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">wastedorworthit.com</div>
-                      <div className="flex items-center justify-between gap-3">
-                        <div>
-                          <div className="font-display font-bold text-white text-base leading-tight">{result.sub.name}</div>
-                          <div className="text-slate-400 text-xs mt-0.5">{formatCurrency(result.monthlyCost)}/mo · {result.usage}× per month</div>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <div className="font-display font-bold text-white text-base leading-tight truncate">{result.sub.name}</div>
+                          <div className="text-slate-500 text-[11px] uppercase tracking-wider mt-0.5 mb-2">{result.sub.category}</div>
+                          {/* Clearly labelled stat pills */}
+                          <div className="flex flex-wrap gap-1.5">
+                            <span className="inline-flex items-center gap-1 bg-slate-800/80 border border-slate-700 rounded-lg px-2 py-0.5 text-[11px] font-bold">
+                              <span className="text-slate-500">Monthly</span>
+                              <span className="text-slate-200">{formatCurrency(result.monthlyCost)}</span>
+                            </span>
+                            <span className="inline-flex items-center gap-1 bg-slate-800/80 border border-slate-700 rounded-lg px-2 py-0.5 text-[11px] font-bold">
+                              <span className="text-slate-500">Per use</span>
+                              <span className={result.verdictClass === 'good' ? 'text-emerald-400' : result.verdictClass === 'consider' ? 'text-amber-400' : 'text-rose-400'}>
+                                {result.costPerUse === Infinity ? '∞' : formatCurrency(result.costPerUse)}
+                              </span>
+                            </span>
+                            <span className="inline-flex items-center gap-1 bg-slate-800/80 border border-slate-700 rounded-lg px-2 py-0.5 text-[11px] font-bold">
+                              <span className="text-slate-500">Uses/mo</span>
+                              <span className="text-indigo-400">{result.usage}×</span>
+                            </span>
+                          </div>
                           {result.verdictClass === 'wasted' && (
-                            <div className="text-rose-400 text-xs font-bold mt-1">Wasting {formatCurrency(result.annualCost)}/yr 😅</div>
+                            <div className="text-rose-400 text-xs font-bold mt-2">Wasting {formatCurrency(result.annualCost)}/yr 😅</div>
                           )}
                           {result.verdictClass === 'good' && (
-                            <div className="text-emerald-400 text-xs font-bold mt-1">Worth every penny at {formatCurrency(result.costPerUse)}/use 🎉</div>
+                            <div className="text-emerald-400 text-xs font-bold mt-2">Worth every penny 🎉</div>
                           )}
                           {result.verdictClass === 'consider' && (
-                            <div className="text-amber-400 text-xs font-bold mt-1">On the fence — use it more or cut it 🤔</div>
+                            <div className="text-amber-400 text-xs font-bold mt-2">Use it more or cut it 🤔</div>
                           )}
                         </div>
                         <div className={`text-sm font-bold px-3 py-1.5 rounded-lg border shrink-0
