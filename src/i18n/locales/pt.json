@@ -63,7 +63,11 @@
     "detail_zero": "Você paga {{cost}}/mês por nada. São {{annual}} por ano desperdiçados.",
     "detail_good": "A {{cost}}/{{unit}}, você está bem abaixo do limite de {{benchmark}} para {{category}}. Continue assim!",
     "detail_consider": "A {{cost}}/{{unit}}, você está se aproximando do limite de {{benchmark}} para {{category}}. Use mais ou encontre uma oferta melhor.",
-    "detail_wasted": "A {{cost}}/{{unit}}, você ultrapassa o limite de {{benchmark}} para {{category}}. Cancele ou faça downgrade."
+    "detail_wasted": "A {{cost}}/{{unit}}, você ultrapassa o limite de {{benchmark}} para {{category}}. Cancele ou faça downgrade.",
+    "runway_impact": "A {{cost}}/mês, esta assinatura consome cerca de {{days}} dias de liberdade financeira por ano. Cancele e mantenha {{annual}} trabalhando pelo seu futuro.",
+    "runway_cta": "Ver sua pista financeira completa",
+    "share_title": "Meu veredicto de assinatura",
+    "share_download": "Baixar cartão"
   },
   "sidebar": {
     "did_you_know": "Você sabia?",
@@ -94,7 +98,9 @@
     "remove": "Remover",
     "subtitle_one": "{{count}} assinatura rastreada",
     "subtitle_other": "{{count}} assinaturas rastreadas",
-    "saveable_yearly": "Economizável / Ano"
+    "saveable_yearly": "Economizável / Ano",
+    "export": "Exportar",
+    "import": "Importar"
   },
   "resources": {
     "title": "Alternativas gratuitas a",
@@ -188,5 +194,8 @@
     "order": "pedido",
     "match": "match",
     "use": "uso"
+  },
+  "trust": {
+    "privacy_badge": "100% privado — seus dados nunca saem deste navegador"
   }
 }

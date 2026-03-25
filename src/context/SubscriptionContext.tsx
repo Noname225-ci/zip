@@ -16,6 +16,8 @@ interface SubscriptionContextType {
   items: SubscriptionItem[];
   addItem: (item: SubscriptionItem) => void;
   removeItem: (id: string) => void;
+  importItems: (imported: SubscriptionItem[]) => void;
+  clearAll: () => void;
   totalMonthlyCost: number;
   totalYearlyCost: number;
   wastedCount: number;
@@ -49,6 +51,14 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     setItems(prev => prev.filter(i => i.id !== id));
   };
 
+  const importItems = (imported: SubscriptionItem[]) => {
+    setItems(imported);
+  };
+
+  const clearAll = () => {
+    setItems([]);
+  };
+
   const totalMonthlyCost = items.reduce((acc, item) => {
     return acc + (item.frequency === 'yearly' ? item.cost / 12 : item.cost);
   }, 0);
@@ -61,6 +71,8 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       items,
       addItem,
       removeItem,
+      importItems,
+      clearAll,
       totalMonthlyCost,
       totalYearlyCost,
       wastedCount

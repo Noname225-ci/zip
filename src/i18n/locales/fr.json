@@ -63,7 +63,11 @@
     "detail_zero": "Vous payez {{cost}}/mois pour rien. C'est {{annual}} par an gaspillés.",
     "detail_good": "À {{cost}}/{{unit}}, vous êtes bien en dessous du seuil de {{benchmark}} pour {{category}}. Conservez-le !",
     "detail_consider": "À {{cost}}/{{unit}}, vous approchez le seuil de {{benchmark}} pour {{category}}. Utilisez-le davantage ou trouvez une meilleure offre.",
-    "detail_wasted": "À {{cost}}/{{unit}}, vous dépassez largement le seuil de {{benchmark}} pour {{category}}. Annulez ou réduisez votre abonnement."
+    "detail_wasted": "À {{cost}}/{{unit}}, vous dépassez largement le seuil de {{benchmark}} pour {{category}}. Annulez ou réduisez votre abonnement.",
+    "runway_impact": "À {{cost}}/mois, cet abonnement consomme environ {{days}} jours de liberté financière par an. Annulez-le et gardez {{annual}} pour votre avenir.",
+    "runway_cta": "Voir votre piste financière complète",
+    "share_title": "Mon verdict d'abonnement",
+    "share_download": "Télécharger la carte"
   },
   "sidebar": {
     "did_you_know": "Le saviez-vous ?",
@@ -94,7 +98,9 @@
     "remove": "Supprimer",
     "subtitle_one": "{{count}} abonnement suivi",
     "subtitle_other": "{{count}} abonnements suivis",
-    "saveable_yearly": "Économisable / An"
+    "saveable_yearly": "Économisable / An",
+    "export": "Exporter",
+    "import": "Importer"
   },
   "resources": {
     "title": "Alternatives gratuites à",
@@ -188,5 +194,8 @@
     "order": "commande",
     "match": "match",
     "use": "utilisation"
+  },
+  "trust": {
+    "privacy_badge": "100 % privé — vos données ne quittent jamais ce navigateur"
   }
 }

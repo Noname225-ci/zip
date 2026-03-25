@@ -63,7 +63,11 @@
     "detail_zero": "You're paying {{cost}}/mo for nothing. That's {{annual}} a year gone.",
     "detail_good": "At {{cost}}/{{unit}}, you are well under the {{benchmark}} benchmark for {{category}}. Keep it!",
     "detail_consider": "At {{cost}}/{{unit}}, you are pushing the {{benchmark}} benchmark for {{category}}. Use it more or find a better deal.",
-    "detail_wasted": "At {{cost}}/{{unit}}, you are well above the {{benchmark}} benchmark for {{category}}. Cancel or downgrade."
+    "detail_wasted": "At {{cost}}/{{unit}}, you are well above the {{benchmark}} benchmark for {{category}}. Cancel or downgrade.",
+    "runway_impact": "At {{cost}}/mo, this subscription uses up roughly {{days}} days of financial runway per year. Cancel it and keep {{annual}} working for your freedom.",
+    "runway_cta": "See your full financial runway",
+    "share_title": "My Subscription Verdict",
+    "share_download": "Download card"
   },
   "sidebar": {
     "did_you_know": "Did You Know?",
@@ -94,7 +98,9 @@
     "remove": "Remove",
     "subtitle_one": "{{count}} subscription tracked",
     "subtitle_other": "{{count}} subscriptions tracked",
-    "saveable_yearly": "Saveable / Year"
+    "saveable_yearly": "Saveable / Year",
+    "export": "Export",
+    "import": "Import"
   },
   "resources": {
     "title": "Free Alternatives to",
@@ -188,5 +194,8 @@
     "order": "order",
     "match": "match",
     "use": "use"
+  },
+  "trust": {
+    "privacy_badge": "100% private — your data never leaves this browser"
   }
 }

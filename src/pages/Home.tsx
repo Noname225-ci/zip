@@ -23,6 +23,11 @@ import {
   TrendingUp,
   ChevronRight,
   Trash2,
+  Download,
+  Upload,
+  Share2,
+  Lock,
+  Timer,
 } from 'lucide-react';
 import { subscriptionsData, categoryThresholds, defaultThresholds } from '../data/subscriptions';
 import { categoryResources } from '../data/resources';
@@ -54,7 +59,7 @@ interface CalculationResult {
 export default function Home() {
   const { t } = useTranslation();
   const { currency, formatCurrency } = useCurrency();
-  const { addItem, items, removeItem } = useSubscription();
+  const { addItem, items, removeItem, importItems, clearAll } = useSubscription();
 
   const [selectedSubId, setSelectedSubId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -167,6 +172,22 @@ export default function Home() {
     results = results.filter((item, i, self) => i === self.findIndex(x => x.id === item.id));
     setFilteredSubs(results);
   }, [searchTerm]);
+
+  const handleShareVerdict = async () => {
+    const card = document.getElementById('verdict-share-card');
+    if (!card) return;
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const canvas = await html2canvas(card, { backgroundColor: '#0a1628', scale: 2 });
+      canvas.toBlob(blob => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = 'my-subscription-verdict.png'; a.click();
+        URL.revokeObjectURL(url);
+      });
+    } catch (e) { console.error(e); }
+  };
 
   const handleSelectSub = (sub: typeof subscriptionsData[0]) => {
     setSelectedSubId(sub.id);
@@ -329,6 +350,10 @@ export default function Home() {
             >
               {t('calculator.calculate_btn')} <ArrowRight size={18} />
             </a>
+            <p className="mt-4 flex items-center gap-2 text-sm text-teal-100/70">
+              <Lock size={13} className="shrink-0" />
+              {t('trust.privacy_badge')}
+            </p>
           </div>
         </motion.div>
 
@@ -621,6 +646,56 @@ export default function Home() {
                     )}
                   </div>
 
+                  {/* ── Runway Impact ── */}
+                  <div className="bg-gradient-to-r from-indigo-900/30 to-teal-900/20 rounded-2xl p-5 border border-indigo-500/20">
+                    <div className="flex items-start gap-3">
+                      <div className="w-8 h-8 rounded-xl bg-indigo-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                        <Timer size={16} className="text-indigo-400" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm text-slate-300 leading-relaxed">
+                          {t('verdict.runway_impact', {
+                            cost: formatCurrency(result.monthlyCost),
+                            days: Math.round(result.monthlyCost / (2000 / 30.44)),
+                            annual: formatCurrency(result.annualCost)
+                          })}
+                        </p>
+                        <a
+                          href="#runway"
+                          className="inline-flex items-center gap-1.5 mt-2 text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
+                        >
+                          {t('verdict.runway_cta')} <ChevronRight size={13} />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* ── Share verdict card ── */}
+                  <div id="verdict-share-card" className="bg-[#0a1628] rounded-2xl p-5 border border-slate-700/40">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('verdict.share_title')}</span>
+                      <button
+                        onClick={handleShareVerdict}
+                        className="flex items-center gap-1.5 text-xs font-bold text-teal-400 hover:text-teal-300 bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/20 px-3 py-1.5 rounded-lg transition-colors"
+                      >
+                        <Download size={13} /> {t('verdict.share_download')}
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-display font-bold text-white text-lg">{result.sub.name}</div>
+                        <div className="text-slate-400 text-sm">{formatCurrency(result.monthlyCost)}/mo · {result.usage}× per month</div>
+                      </div>
+                      <div className={`text-sm font-bold px-4 py-2 rounded-xl border
+                        ${result.verdictClass === 'good'    ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                        : result.verdictClass === 'consider' ? 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                        : 'bg-rose-500/15 text-rose-300 border-rose-500/30'}`}>
+                        {result.verdict}
+                      </div>
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-slate-700/40 text-[10px] text-slate-600 text-right">wastedorworthit.com</div>
+                  </div>
+
                   <ResourcesContent sub={result.sub} />
 
                   {/* Reminder */}
@@ -786,10 +861,33 @@ function MetricCard({ label, value, highlight = false }: { label: string; value:
 
 function SubscriptionDashboard() {
   const { t } = useTranslation();
-  const { items, removeItem, totalMonthlyCost, totalYearlyCost, wastedCount } = useSubscription();
+  const { items, removeItem, importItems, clearAll, totalMonthlyCost, totalYearlyCost, wastedCount } = useSubscription();
   const { formatCurrency } = useCurrency();
 
   if (items.length === 0) return null;
+
+  const handleExport = () => {
+    const data = JSON.stringify(items, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'my-subscriptions.json'; a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const parsed = JSON.parse(ev.target?.result as string);
+        if (Array.isArray(parsed)) { importItems(parsed); }
+      } catch { alert('Invalid file format.'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  };
 
   const moneyPitSavings = items
     .filter(i => i.verdict === 'wasted')
@@ -802,13 +900,27 @@ function SubscriptionDashboard() {
       animate={{ opacity: 1, y: 0 }}
       className="mt-12"
     >
-      <div className="flex items-center gap-3 mb-6">
-        <div className="bg-teal-500/20 p-3 rounded-2xl text-teal-400">
-          <BarChart3 size={22} />
+      <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
+        <div className="flex items-center gap-3">
+          <div className="bg-teal-500/20 p-3 rounded-2xl text-teal-400">
+            <BarChart3 size={22} />
+          </div>
+          <div>
+            <h2 className="text-2xl font-display font-bold text-white">{t('dashboard.title')}</h2>
+            <p className="text-sm text-slate-400">{items.length === 1 ? t('dashboard.subtitle_one', { count: 1 }) : t('dashboard.subtitle_other', { count: items.length })}</p>
+          </div>
         </div>
-        <div>
-          <h2 className="text-2xl font-display font-bold text-white">{t('dashboard.title')}</h2>
-          <p className="text-sm text-slate-400">{items.length === 1 ? t('dashboard.subtitle_one', { count: 1 }) : t('dashboard.subtitle_other', { count: items.length })}</p>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleExport}
+            className="flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-2 rounded-xl transition-colors"
+          >
+            <Download size={13} /> {t('dashboard.export')}
+          </button>
+          <label className="flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-2 rounded-xl transition-colors cursor-pointer">
+            <Upload size={13} /> {t('dashboard.import')}
+            <input type="file" accept=".json" className="hidden" onChange={handleImport} />
+          </label>
         </div>
       </div>
 

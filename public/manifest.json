@@ -1,0 +1,15 @@
+{
+  "name": "Wasted or Worth It",
+  "short_name": "Worth It?",
+  "description": "Calculate the real cost-per-use of your subscriptions. Find out what to cancel.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a1628",
+  "theme_color": "#0a1628",
+  "icons": [
+    { "src": "/logo.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/logo.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "categories": ["finance", "utilities"],
+  "lang": "en"
+}
