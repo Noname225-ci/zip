@@ -455,7 +455,8 @@ export default function RunwayCalculator() {
                       -{expenseReduction}%
                     </span>
                   </div>
-                  <div className="relative w-full h-6 flex items-center">
+                  {/* Tall touch target wrapper for mobile */}
+                  <div className="relative w-full py-3 flex items-center" style={{ touchAction: 'none' }}>
                     <input
                       id="expense-reduction-slider"
                       type="range"
@@ -464,8 +465,14 @@ export default function RunwayCalculator() {
                       step="1"
                       value={expenseReduction}
                       onChange={(e) => setExpenseReduction(parseInt(e.target.value))}
-                      className="w-full h-2 bg-slate-700 rounded-full appearance-none cursor-pointer accent-indigo-500 hover:accent-indigo-400 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
+                      onTouchStart={(e) => e.stopPropagation()}
+                      style={{ touchAction: 'none' }}
+                      className="w-full focus:outline-none focus:ring-2 focus:ring-indigo-500/50"
                     />
+                  </div>
+                  {/* Tick marks for 0 / 25 / 50 */}
+                  <div className="flex justify-between text-[10px] font-bold text-slate-600 px-1 -mt-2">
+                    <span>0%</span><span>25%</span><span>50%</span>
                   </div>
                   <p className="text-xs text-slate-500">
                     {t('runway.reduction_desc', { pct: expenseReduction })}

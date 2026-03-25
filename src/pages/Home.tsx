@@ -24,7 +24,6 @@ import {
   ChevronRight,
   Trash2,
   Download,
-  Upload,
   Lock,
   Timer,
   Coffee,
@@ -62,7 +61,7 @@ interface CalculationResult {
 export default function Home() {
   const { t } = useTranslation();
   const { currency, formatCurrency } = useCurrency();
-  const { addItem, items, removeItem, importItems, clearAll } = useSubscription();
+  const { addItem, items, removeItem, clearAll } = useSubscription();
 
   const [selectedSubId, setSelectedSubId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -181,15 +180,31 @@ export default function Home() {
     if (!card) return;
     try {
       const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(card, { backgroundColor: '#0a1628', scale: 2 });
+      const canvas = await html2canvas(card, { backgroundColor: '#0a1628', scale: 2, useCORS: true, logging: false });
       canvas.toBlob(blob => {
-        if (!blob) return;
+        if (!blob) {
+          // Fallback: open data URL directly
+          const dataUrl = canvas.toDataURL('image/png');
+          const a = document.createElement('a');
+          a.href = dataUrl;
+          a.download = 'my-subscription-verdict.png';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          return;
+        }
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
-        a.href = url; a.download = 'my-subscription-verdict.png'; a.click();
-        URL.revokeObjectURL(url);
-      });
-    } catch (e) { console.error(e); }
+        a.href = url;
+        a.download = 'my-subscription-verdict.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }, 'image/png');
+    } catch (e) {
+      console.error('Share card download failed:', e);
+    }
   };
 
   const handleSelectSub = (sub: typeof subscriptionsData[0]) => {
@@ -206,57 +221,55 @@ export default function Home() {
     setResult(null);
     setAddedToDashboard(false);
 
-    setTimeout(() => {
-      const costValue = parseFloat(cost);
-      const usageValue = parseInt(usage, 10);
+    const costValue = parseFloat(cost);
+    const usageValue = parseInt(usage, 10);
 
-      if (!selectedSubId) { setError(t('calculator.error_select')); setLoading(false); return; }
-      if (isNaN(costValue) || costValue <= 0) { setError(t('calculator.error_cost')); setLoading(false); return; }
-      if (isNaN(usageValue) || usageValue < 0) { setError(t('calculator.error_usage')); setLoading(false); return; }
+    if (!selectedSubId) { setError(t('calculator.error_select')); setLoading(false); return; }
+    if (isNaN(costValue) || costValue <= 0) { setError(t('calculator.error_cost')); setLoading(false); return; }
+    if (isNaN(usageValue) || usageValue < 0) { setError(t('calculator.error_usage')); setLoading(false); return; }
 
-      const sub = subscriptionsData.find(s => s.id === selectedSubId);
-      if (!sub) { setLoading(false); return; }
+    const sub = subscriptionsData.find(s => s.id === selectedSubId);
+    if (!sub) { setLoading(false); return; }
 
-      const monthlyCost = frequency === 'yearly' ? costValue / 12 : costValue;
-      const annualCost = monthlyCost * 12;
-      const dailyCost = monthlyCost / 30.44;
-      const costPerUse = usageValue === 0 ? Infinity : monthlyCost / usageValue;
-      const thresholds = categoryThresholds[sub.category] || defaultThresholds;
+    const monthlyCost = frequency === 'yearly' ? costValue / 12 : costValue;
+    const annualCost = monthlyCost * 12;
+    const dailyCost = monthlyCost / 30.44;
+    const costPerUse = usageValue === 0 ? Infinity : monthlyCost / usageValue;
+    const thresholds = categoryThresholds[sub.category] || defaultThresholds;
 
-      let verdict: string, verdictClass: 'good' | 'consider' | 'wasted', detailMsg: string, meterPct: number, showSuggestions: boolean;
+    let verdict: string, verdictClass: 'good' | 'consider' | 'wasted', detailMsg: string, meterPct: number, showSuggestions: boolean;
 
-      const unit = t(`units.${thresholds.unit}`, thresholds.unit);
-      const benchmark = formatCurrency(thresholds.good);
-      const category = sub.category;
+    const unit = t(`units.${thresholds.unit}`, thresholds.unit);
+    const benchmark = formatCurrency(thresholds.good);
+    const category = sub.category;
 
-      if (costPerUse === Infinity) {
-        verdict = t('verdict.wasted'); verdictClass = 'wasted';
-        detailMsg = t('verdict.detail_zero', { cost: formatCurrency(monthlyCost), annual: formatCurrency(annualCost) });
-        meterPct = 0; showSuggestions = true;
-      } else if (costPerUse <= thresholds.good) {
-        verdict = t('verdict.good'); verdictClass = 'good';
-        detailMsg = t('verdict.detail_good', { cost: formatCurrency(costPerUse), unit, benchmark, category });
-        meterPct = 100; showSuggestions = false;
-      } else if (costPerUse <= thresholds.consider) {
-        verdict = t('verdict.consider'); verdictClass = 'consider';
-        detailMsg = t('verdict.detail_consider', { cost: formatCurrency(costPerUse), unit, benchmark, category });
-        meterPct = 50; showSuggestions = true;
-      } else {
-        verdict = t('verdict.wasted'); verdictClass = 'wasted';
-        detailMsg = t('verdict.detail_wasted', { cost: formatCurrency(costPerUse), unit, benchmark, category });
-        meterPct = 20; showSuggestions = true;
-      }
+    if (costPerUse === Infinity) {
+      verdict = t('verdict.wasted'); verdictClass = 'wasted';
+      detailMsg = t('verdict.detail_zero', { cost: formatCurrency(monthlyCost), annual: formatCurrency(annualCost) });
+      meterPct = 0; showSuggestions = true;
+    } else if (costPerUse <= thresholds.good) {
+      verdict = t('verdict.good'); verdictClass = 'good';
+      detailMsg = t('verdict.detail_good', { cost: formatCurrency(costPerUse), unit, benchmark, category });
+      meterPct = 100; showSuggestions = false;
+    } else if (costPerUse <= thresholds.consider) {
+      verdict = t('verdict.consider'); verdictClass = 'consider';
+      detailMsg = t('verdict.detail_consider', { cost: formatCurrency(costPerUse), unit, benchmark, category });
+      meterPct = 50; showSuggestions = true;
+    } else {
+      verdict = t('verdict.wasted'); verdictClass = 'wasted';
+      detailMsg = t('verdict.detail_wasted', { cost: formatCurrency(costPerUse), unit, benchmark, category });
+      meterPct = 20; showSuggestions = true;
+    }
 
-      const breakEvenUses = Math.ceil(monthlyCost / (thresholds.good || 1));
-      const lattesPerMonth = monthlyCost / 6.50;
-      const savingsProjection = verdictClass !== 'good'
-        ? { yr1: annualCost, yr3: annualCost * 3, yr5: annualCost * 5 }
-        : null;
+    const breakEvenUses = Math.ceil(monthlyCost / (thresholds.good || 1));
+    const lattesPerMonth = monthlyCost / 6.50;
+    const savingsProjection = verdictClass !== 'good'
+      ? { yr1: annualCost, yr3: annualCost * 3, yr5: annualCost * 5 }
+      : null;
 
-      setResult({ monthlyCost, annualCost, dailyCost, costPerUse, usage: usageValue, sub, verdict, verdictClass, detailMsg, meterPct, showSuggestions, breakEvenUses, lattesPerMonth, savingsProjection });
-      setLoading(false);
-      setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
-    }, 500);
+    setResult({ monthlyCost, annualCost, dailyCost, costPerUse, usage: usageValue, sub, verdict, verdictClass, detailMsg, meterPct, showSuggestions, breakEvenUses, lattesPerMonth, savingsProjection });
+    setLoading(false);
+    setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
   };
 
   const handleReset = () => {
@@ -282,7 +295,20 @@ export default function Home() {
       });
     }
     setAddedToDashboard(true);
-    setTimeout(() => setAddedToDashboard(false), 2500);
+    // Scroll to dashboard so user sees it immediately
+    setTimeout(() => {
+      const dash = document.getElementById('dashboard');
+      if (dash) dash.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 150);
+    setTimeout(() => setAddedToDashboard(false), 3000);
+  };
+
+  const handleRunwayCTA = () => {
+    setRunwayOpen(true);
+    setTimeout(() => {
+      const runway = document.getElementById('runway');
+      if (runway) runway.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
   };
 
   return (
@@ -584,7 +610,7 @@ export default function Home() {
                             : 'bg-slate-700 hover:bg-slate-600 text-white border-slate-600'}`}
                       >
                         {addedToDashboard
-                          ? <><Check size={17} /> {t('verdict.added')}</>
+                          ? <><Check size={17} /> {t('verdict.added')} ↓</>
                           : <><Plus size={17} /> {t('verdict.add_dashboard')}</>}
                       </button>
                     </div>
@@ -664,12 +690,13 @@ export default function Home() {
                             annual: formatCurrency(result.annualCost)
                           })}
                         </p>
-                        <a
-                          href="#runway"
+                        <button
+                          type="button"
+                          onClick={handleRunwayCTA}
                           className="inline-flex items-center gap-1.5 mt-2 text-xs font-bold text-indigo-400 hover:text-indigo-300 transition-colors"
                         >
                           {t('verdict.runway_cta')} <ChevronRight size={13} />
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -920,7 +947,7 @@ function MetricCard({ label, value, highlight = false }: { label: string; value:
 
 function SubscriptionDashboard() {
   const { t } = useTranslation();
-  const { items, removeItem, importItems, clearAll, totalMonthlyCost, totalYearlyCost, wastedCount } = useSubscription();
+  const { items, removeItem, clearAll, totalMonthlyCost, totalYearlyCost, wastedCount } = useSubscription();
   const { formatCurrency } = useCurrency();
 
   if (items.length === 0) return null;
@@ -930,22 +957,11 @@ function SubscriptionDashboard() {
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url; a.download = 'my-subscriptions.json'; a.click();
-    URL.revokeObjectURL(url);
-  };
-
-  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = ev => {
-      try {
-        const parsed = JSON.parse(ev.target?.result as string);
-        if (Array.isArray(parsed)) { importItems(parsed); }
-      } catch { alert('Invalid file format.'); }
-    };
-    reader.readAsText(file);
-    e.target.value = '';
+    a.href = url; a.download = 'my-subscriptions.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
   const moneyPitSavings = items
@@ -976,10 +992,12 @@ function SubscriptionDashboard() {
           >
             <Download size={13} /> {t('dashboard.export')}
           </button>
-          <label className="flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 border border-slate-700 px-3 py-2 rounded-xl transition-colors cursor-pointer">
-            <Upload size={13} /> {t('dashboard.import')}
-            <input type="file" accept=".json" className="hidden" onChange={handleImport} />
-          </label>
+          <button
+            onClick={clearAll}
+            className="flex items-center gap-1.5 text-xs font-bold text-slate-500 hover:text-rose-400 bg-slate-800 hover:bg-rose-500/10 border border-slate-700 hover:border-rose-500/30 px-3 py-2 rounded-xl transition-colors"
+          >
+            <Trash2 size={13} /> Clear all
+          </button>
         </div>
       </div>
 
