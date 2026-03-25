@@ -1,4 +1,4 @@
-import { useState, useRef, FormEvent, useEffect } from 'react';
+import { useState, useRef, FormEvent, useEffect, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import { motion, AnimatePresence } from 'motion/react';
@@ -25,7 +25,6 @@ import {
   Trash2,
   Download,
   Upload,
-  Share2,
   Lock,
   Timer,
 } from 'lucide-react';
@@ -36,7 +35,7 @@ import { useCurrency } from '../context/CurrencyContext';
 import { useSubscription } from '../context/SubscriptionContext';
 import CurrencySelector from '../components/CurrencySelector';
 import LanguageSelector from '../components/LanguageSelector';
-import RunwayCalculator from '../components/RunwayCalculator';
+const RunwayCalculator = lazy(() => import('../components/RunwayCalculator'));
 import { secureStorage } from '../utils/secureStorage';
 
 interface CalculationResult {
@@ -319,6 +318,7 @@ export default function Home() {
                 <a href="#dashboard" className="hover:text-teal-400 transition-colors">{t('nav.dashboard')}</a>
               )}
               <a href="#runway" className="hover:text-teal-400 transition-colors">{t('nav.runway')}</a>
+              <a href="#about" className="hover:text-teal-400 transition-colors">{t('nav.about')}</a>
             </nav>
             <LanguageSelector />
             <CurrencySelector />
@@ -837,12 +837,70 @@ export default function Home() {
                 className="overflow-hidden"
               >
                 <div className="pt-4">
-                  <RunwayCalculator />
+                  <Suspense fallback={<div className="h-40 flex items-center justify-center"><div className="w-6 h-6 border-2 border-teal-400 border-t-transparent rounded-full animate-spin" /></div>}>
+                    <RunwayCalculator />
+                  </Suspense>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
+
+        {/* ── ABOUT ── */}
+        <section id="about" className="mt-20 mb-8">
+          <div className="bg-[#0d1e32] rounded-3xl border border-slate-700/50 p-8 md:p-12 max-w-3xl mx-auto">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-2xl bg-teal-500/15 flex items-center justify-center shrink-0">
+                <span className="text-xl">🔍</span>
+              </div>
+              <h2 className="text-2xl font-display font-bold text-white">Why This Exists</h2>
+            </div>
+
+            <div className="space-y-5 text-slate-300 leading-relaxed text-[15px]">
+              <p>
+                The average person pays for <span className="text-white font-semibold">12 subscriptions a month</span> and actively uses fewer than half of them.
+                The rest run silently in the background — $9.99 here, $14.99 there — until the annual total lands and nobody can explain where the money went.
+              </p>
+              <p>
+                We built this because every other tool that claims to help you with this
+                either asks for your <span className="text-white font-semibold">bank login</span>,
+                requires you to <span className="text-white font-semibold">create an account</span>,
+                or buries the answer under a subscription of its own.
+                None of that made sense.
+              </p>
+              <p>
+                The math is not complicated. If you pay $15/month for something you use 3 times,
+                each use costs $5. Whether that is a good deal depends entirely on
+                <span className="text-white font-semibold"> what you are buying</span> — a gym visit at $5 is a bargain,
+                a Netflix stream at $5 is a waste. We built that distinction in.
+              </p>
+              <p>
+                Everything runs in your browser. No data is sent anywhere.
+                No account, no email, no tracking.
+                Your financial information is yours.
+              </p>
+            </div>
+
+            <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {[
+                { icon: '🔒', label: 'Zero data collection', sub: 'Runs 100% in your browser' },
+                { icon: '⚡', label: 'Instant verdict', sub: 'No signup, no waiting' },
+                { icon: '🎯', label: 'Category-smart', sub: 'Different bar for gym vs. streaming' },
+              ].map(({ icon, label, sub }) => (
+                <div key={label} className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/40 text-center">
+                  <div className="text-2xl mb-2">{icon}</div>
+                  <div className="text-sm font-bold text-white">{label}</div>
+                  <div className="text-xs text-slate-500 mt-1">{sub}</div>
+                </div>
+              ))}
+            </div>
+
+            <p className="mt-8 text-xs text-slate-600 text-center">
+              No ads influence the verdicts. No affiliate relationship changes what we recommend.
+              The calculator gives you the math — what you do with it is up to you.
+            </p>
+          </div>
+        </section>
 
       </main>
     </div>

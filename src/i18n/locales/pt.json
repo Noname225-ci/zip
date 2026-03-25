@@ -2,7 +2,8 @@
   "nav": {
     "subscriptions": "Assinaturas",
     "dashboard": "Painel",
-    "runway": "Autonomia"
+    "runway": "Autonomia",
+    "about": "Sobre"
   },
   "hero": {
     "headline1": "Pare de adivinhar.",

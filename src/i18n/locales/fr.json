@@ -2,7 +2,8 @@
   "nav": {
     "subscriptions": "Abonnements",
     "dashboard": "Tableau de bord",
-    "runway": "Autonomie"
+    "runway": "Autonomie",
+    "about": "À propos"
   },
   "hero": {
     "headline1": "Arrêtez de deviner.",
