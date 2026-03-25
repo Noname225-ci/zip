@@ -22,6 +22,7 @@ import {
   Zap,
   TrendingUp,
   ChevronRight,
+  Trash2,
 } from 'lucide-react';
 import { subscriptionsData, categoryThresholds, defaultThresholds } from '../data/subscriptions';
 import { categoryResources } from '../data/resources';
@@ -45,12 +46,15 @@ interface CalculationResult {
   detailMsg: string;
   meterPct: number;
   showSuggestions: boolean;
+  breakEvenUses: number;
+  lattesPerMonth: number;
+  savingsProjection: { yr1: number; yr3: number; yr5: number } | null;
 }
 
 export default function Home() {
   const { t } = useTranslation();
   const { currency, formatCurrency } = useCurrency();
-  const { addItem, items } = useSubscription();
+  const { addItem, items, removeItem } = useSubscription();
 
   const [selectedSubId, setSelectedSubId] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -215,7 +219,13 @@ export default function Home() {
         meterPct = 20; showSuggestions = true;
       }
 
-      setResult({ monthlyCost, annualCost, dailyCost, costPerUse, usage: usageValue, sub, verdict, verdictClass, detailMsg, meterPct, showSuggestions });
+      const breakEvenUses = Math.ceil(monthlyCost / (thresholds.good || 1));
+      const lattesPerMonth = monthlyCost / 6.50;
+      const savingsProjection = verdictClass !== 'good'
+        ? { yr1: annualCost, yr3: annualCost * 3, yr5: annualCost * 5 }
+        : null;
+
+      setResult({ monthlyCost, annualCost, dailyCost, costPerUse, usage: usageValue, sub, verdict, verdictClass, detailMsg, meterPct, showSuggestions, breakEvenUses, lattesPerMonth, savingsProjection });
       setLoading(false);
       setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
     }, 500);
@@ -280,6 +290,7 @@ export default function Home() {
           <div className="flex items-center gap-2 sm:gap-3">
             <nav className="hidden md:flex gap-5 text-sm font-semibold text-slate-400 items-center">
               <a href="#calculator" className="hover:text-teal-400 transition-colors">{t('nav.subscriptions')}</a>
+              <a href="#dashboard" className="hover:text-teal-400 transition-colors">{t('nav.dashboard')}</a>
               <a href="#runway" className="hover:text-teal-400 transition-colors">{t('nav.runway')}</a>
             </nav>
             <LanguageSelector />
@@ -552,6 +563,58 @@ export default function Home() {
                     <MetricCard label="Daily" value={formatCurrency(result.dailyCost)} />
                   </div>
 
+                  {/* Financial Insights */}
+                  <div className="bg-[#0d1e32] rounded-2xl p-5 border border-slate-700/60 space-y-4">
+                    <h4 className="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
+                      <TrendingUp size={15} className="text-teal-400" /> Financial Insights
+                    </h4>
+
+                    {/* Break-even */}
+                    <div className="flex items-start gap-3">
+                      <div className="w-7 h-7 rounded-full bg-teal-500/15 flex items-center justify-center shrink-0 mt-0.5">
+                        <CheckCircle2 size={14} className="text-teal-400" />
+                      </div>
+                      <p className="text-slate-300 text-sm leading-relaxed">
+                        You need{' '}
+                        <span className="font-bold text-white">{result.breakEvenUses}× per month</span>{' '}
+                        to justify the cost at the "worth it" threshold.
+                        {result.usage > 0 && result.usage < result.breakEvenUses && (
+                          <span className="text-rose-400 font-bold"> You're {result.breakEvenUses - result.usage} short.</span>
+                        )}
+                        {result.usage > 0 && result.usage >= result.breakEvenUses && (
+                          <span className="text-emerald-400 font-bold"> You're there! 🎉</span>
+                        )}
+                      </p>
+                    </div>
+
+                    {/* Latte comparison */}
+                    <div className="flex items-start gap-3">
+                      <div className="w-7 h-7 rounded-full bg-amber-500/15 flex items-center justify-center shrink-0 mt-0.5 text-base">
+                        ☕
+                      </div>
+                      <p className="text-slate-300 text-sm leading-relaxed">
+                        That's roughly{' '}
+                        <span className="font-bold text-amber-300">{result.lattesPerMonth.toFixed(1)} lattes</span>{' '}
+                        a month at $6.50 each.
+                      </p>
+                    </div>
+
+                    {/* Savings projection */}
+                    {result.savingsProjection && (
+                      <div className="flex items-start gap-3">
+                        <div className="w-7 h-7 rounded-full bg-emerald-500/15 flex items-center justify-center shrink-0 mt-0.5 text-base">
+                          💰
+                        </div>
+                        <p className="text-slate-300 text-sm leading-relaxed">
+                          Cancel and save{' '}
+                          <span className="font-bold text-emerald-400">{formatCurrency(result.savingsProjection.yr1)}</span> this year,{' '}
+                          <span className="font-bold text-emerald-400">{formatCurrency(result.savingsProjection.yr3)}</span> over 3 years,{' '}
+                          <span className="font-bold text-emerald-400">{formatCurrency(result.savingsProjection.yr5)}</span> over 5 years.
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
                   <ResourcesContent sub={result.sub} />
 
                   {/* Reminder */}
@@ -659,6 +722,9 @@ export default function Home() {
           </div>
         </div>
 
+        {/* ── SUBSCRIPTION DASHBOARD ── */}
+        <SubscriptionDashboard />
+
         {/* ── RUNWAY CALCULATOR (collapsible) ── */}
         <div id="runway" className="mt-16">
           <button
@@ -709,6 +775,99 @@ function MetricCard({ label, value, highlight = false }: { label: string; value:
       <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{label}</span>
       <span className={`text-2xl font-display font-bold ${highlight ? 'text-teal-300' : 'text-slate-200'}`}>{value}</span>
     </div>
+  );
+}
+
+function SubscriptionDashboard() {
+  const { t } = useTranslation();
+  const { items, removeItem, totalMonthlyCost, totalYearlyCost, wastedCount } = useSubscription();
+  const { formatCurrency } = useCurrency();
+
+  if (items.length === 0) return null;
+
+  const moneyPitSavings = items
+    .filter(i => i.verdict === 'wasted')
+    .reduce((acc, i) => acc + (i.frequency === 'yearly' ? i.cost / 12 : i.cost), 0) * 12;
+
+  return (
+    <motion.div
+      id="dashboard"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mt-12"
+    >
+      <div className="flex items-center gap-3 mb-6">
+        <div className="bg-teal-500/20 p-3 rounded-2xl text-teal-400">
+          <BarChart3 size={22} />
+        </div>
+        <div>
+          <h2 className="text-2xl font-display font-bold text-white">{t('dashboard.title')}</h2>
+          <p className="text-sm text-slate-400">{items.length} subscription{items.length !== 1 ? 's' : ''} tracked</p>
+        </div>
+      </div>
+
+      {/* Summary stats */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5">
+        <div className="bg-[#0d1e32] rounded-2xl p-4 border border-teal-500/30 text-center">
+          <div className="text-2xl font-display font-bold text-teal-300">{formatCurrency(totalMonthlyCost)}</div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">{t('dashboard.monthly_total')}</div>
+        </div>
+        <div className="bg-[#0d1e32] rounded-2xl p-4 border border-slate-700/60 text-center">
+          <div className="text-2xl font-display font-bold text-slate-200">{formatCurrency(totalYearlyCost)}</div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">{t('dashboard.yearly_total')}</div>
+        </div>
+        <div className="bg-[#0d1e32] rounded-2xl p-4 border border-rose-500/20 text-center">
+          <div className="text-2xl font-display font-bold text-rose-400">{wastedCount}</div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">{t('dashboard.money_pits')}</div>
+        </div>
+        <div className="bg-[#0d1e32] rounded-2xl p-4 border border-emerald-500/20 text-center">
+          <div className="text-2xl font-display font-bold text-emerald-400">{formatCurrency(moneyPitSavings)}</div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mt-1">Saveable / Year</div>
+        </div>
+      </div>
+
+      {/* Items list */}
+      <div className="bg-[#0d1e32] rounded-3xl border border-slate-700/60 shadow-xl overflow-hidden">
+        <div className="divide-y divide-slate-700/40">
+          {items.map(item => {
+            const monthlyCost = item.frequency === 'yearly' ? item.cost / 12 : item.cost;
+            return (
+              <div key={item.id} className="flex items-center justify-between px-5 py-4 hover:bg-slate-800/30 transition-colors">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className={`w-2.5 h-2.5 rounded-full shrink-0
+                    ${item.verdict === 'good' ? 'bg-emerald-400'
+                    : item.verdict === 'consider' ? 'bg-amber-400'
+                    : 'bg-rose-400'}`} />
+                  <div className="min-w-0">
+                    <div className="font-bold text-white text-sm truncate">{item.name}</div>
+                    <div className="text-xs text-slate-500 uppercase tracking-wider">{item.category}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 shrink-0 ml-3">
+                  <div className="text-right hidden sm:block">
+                    <div className="font-bold text-slate-200 text-sm">{formatCurrency(monthlyCost)}/mo</div>
+                    <div className="text-xs text-slate-500">{item.usage}× /mo</div>
+                  </div>
+                  <span className={`text-xs font-bold px-2.5 py-1 rounded-full hidden sm:inline
+                    ${item.verdict === 'good' ? 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/20'
+                    : item.verdict === 'consider' ? 'bg-amber-500/15 text-amber-300 border border-amber-500/20'
+                    : 'bg-rose-500/15 text-rose-300 border border-rose-500/20'}`}>
+                    {t(`verdict.${item.verdict}`)}
+                  </span>
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    aria-label={`${t('dashboard.remove')} ${item.name}`}
+                    className="text-slate-500 hover:text-rose-400 transition-colors p-1.5 rounded-lg hover:bg-rose-500/10"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </motion.div>
   );
 }
 

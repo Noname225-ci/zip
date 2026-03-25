@@ -131,5 +131,89 @@ export const categoryResources: Record<string, any> = {
         subreddit: { name: "r/learnprogramming", url: "https://www.reddit.com/r/learnprogramming/" },
         subredditDesc: "For coding specifically — or try r/YouShouldKnow for general life skills. Members share the best free resources and honest reviews of paid platforms.",
         newcomerTip: "Before paying for any online course, check Reddit first. The community often confirms that the free version of a course platform is sufficient for your goals."
+    },
+    "Audiobooks & Reading": {
+        freeSites: [
+            { rank: 1, icon: "📖", name: "Librivox",          desc: "20,000+ free public-domain audiobooks, volunteer-read", url: "https://librivox.org" },
+            { rank: 2, icon: "📚", name: "Project Gutenberg", desc: "70,000+ free classic ebooks, no account needed", url: "https://www.gutenberg.org" },
+            { rank: 3, icon: "✨", name: "Standard Ebooks",   desc: "Public-domain books beautifully reformatted", url: "https://standardebooks.org" },
+            { rank: 4, icon: "🏛️", name: "Open Library",      desc: "Borrow digital books free with a free account", url: "https://openlibrary.org" },
+            { rank: 5, icon: "📱", name: "Libby / Hoopla",    desc: "Free ebooks & audiobooks with your library card", url: "https://libbyapp.com" }
+        ],
+        subreddit: { name: "r/audiobooks", url: "https://www.reddit.com/r/audiobooks/" },
+        subredditDesc: "The audiobook community shares free sources, deals, and honest reviews. They actively track when Audible titles go free and which libraries have the best digital selections.",
+        newcomerTip: "Your public library card is a gold mine. Libby and Hoopla are free apps that connect to your library and give you access to thousands of ebooks and audiobooks at no cost."
+    },
+    "Language Learning": {
+        freeSites: [
+            { rank: 1, icon: "🎧", name: "Language Transfer", desc: "Free audio courses — highly rated, builds real fluency", url: "https://languagetransfer.org" },
+            { rank: 2, icon: "🦜", name: "Duolingo (Free)",   desc: "Gamified lessons — free tier covers core content", url: "https://duolingo.com" },
+            { rank: 3, icon: "🃏", name: "Anki",              desc: "Free spaced-repetition flashcards, best for vocabulary", url: "https://apps.ankiweb.net" },
+            { rank: 4, icon: "💬", name: "Tandem",            desc: "Free language exchange with native speakers worldwide", url: "https://tandem.net" },
+            { rank: 5, icon: "📻", name: "BBC Languages",     desc: "Free language lessons and audio from the BBC", url: "https://www.bbc.co.uk/languages" }
+        ],
+        subreddit: { name: "r/languagelearning", url: "https://www.reddit.com/r/languagelearning/" },
+        subredditDesc: "A huge community sharing proven free methods, app comparisons, and study schedules. They're very honest about which paid apps are worth it — most aren't.",
+        newcomerTip: "Language Transfer is free and consistently outperforms paid apps for building real conversational ability. Start there before spending anything."
+    },
+    "AI Tools": {
+        freeSites: [
+            { rank: 1, icon: "🤖", name: "ChatGPT (Free)",    desc: "GPT-4o access on free tier for everyday tasks", url: "https://chat.openai.com" },
+            { rank: 2, icon: "🧠", name: "Claude (Free)",     desc: "Strong reasoning and writing on the free tier", url: "https://claude.ai" },
+            { rank: 3, icon: "🔍", name: "Perplexity (Free)", desc: "AI-powered web search with cited sources", url: "https://perplexity.ai" },
+            { rank: 4, icon: "💎", name: "Gemini (Free)",     desc: "Google's AI, integrated with Google Workspace", url: "https://gemini.google.com" },
+            { rank: 5, icon: "🖼️", name: "Adobe Firefly",    desc: "Free AI image generation with monthly credits", url: "https://firefly.adobe.com" }
+        ],
+        subreddit: { name: "r/ChatGPT", url: "https://www.reddit.com/r/ChatGPT/" },
+        subredditDesc: "Tips, prompts, and honest comparisons of AI tools. The community regularly benchmarks free vs. paid tiers and shares workflows that make the free tier go much further.",
+        newcomerTip: "Rotate between free tiers of ChatGPT, Claude, and Gemini when you hit rate limits. Most everyday tasks don't require a paid plan."
+    },
+    "Password & Security": {
+        freeSites: [
+            { rank: 1, icon: "🔐", name: "Bitwarden (Free)",  desc: "Open-source, audited, unlimited passwords — best free option", url: "https://bitwarden.com" },
+            { rank: 2, icon: "🗝️", name: "KeePassXC",        desc: "Fully local, no cloud, 100% free and open-source", url: "https://keepassxc.org" },
+            { rank: 3, icon: "🍎", name: "iCloud Keychain",   desc: "Built-in password manager for Apple devices, free", url: null },
+            { rank: 4, icon: "🔒", name: "Google Password Manager", desc: "Free, syncs across Chrome and Android", url: "https://passwords.google.com" },
+            { rank: 5, icon: "🛡️", name: "Have I Been Pwned", desc: "Free service to check if your email was in a data breach", url: "https://haveibeenpwned.com" }
+        ],
+        subreddit: { name: "r/privacy", url: "https://www.reddit.com/r/privacy/" },
+        subredditDesc: "Practical privacy advice without the paranoia. The community maintains a wiki with the best free security tools and regularly recommends Bitwarden over every paid alternative.",
+        newcomerTip: "Bitwarden is the community consensus best free password manager — open-source, independently audited, and works on every platform. No reason to pay for most password managers."
+    },
+    "Notes & Productivity": {
+        freeSites: [
+            { rank: 1, icon: "💎", name: "Obsidian (Free)",   desc: "Local Markdown notes, powerful plugins, no subscription", url: "https://obsidian.md" },
+            { rank: 2, icon: "📝", name: "Notion (Free)",     desc: "Generous free tier — unlimited blocks since 2024", url: "https://notion.so" },
+            { rank: 3, icon: "🎵", name: "Joplin (Free)",     desc: "Open-source Evernote replacement, end-to-end encrypted", url: "https://joplinapp.org" },
+            { rank: 4, icon: "🍎", name: "Apple Notes",       desc: "Surprisingly powerful, syncs via iCloud, completely free", url: null },
+            { rank: 5, icon: "📌", name: "Google Keep",       desc: "Simple, fast, syncs everywhere — great for quick notes", url: "https://keep.google.com" }
+        ],
+        subreddit: { name: "r/PKMS", url: "https://www.reddit.com/r/PKMS/" },
+        subredditDesc: "Personal Knowledge Management System community. Deep comparisons of every notes app with honest takes on which paid features are worth it (usually none for personal use).",
+        newcomerTip: "Obsidian's free version is one of the most powerful notes apps available. Your notes stay as plain text files on your computer — no lock-in, no subscription needed."
+    },
+    "Food Delivery": {
+        freeSites: [
+            { rank: 1, icon: "🚗", name: "Store Pickup (Free)", desc: "Curbside pickup at most grocery chains — no fees at all", url: null },
+            { rank: 2, icon: "🛒", name: "Walmart Pickup",    desc: "Free grocery pickup — no membership required", url: "https://www.walmart.com/grocery" },
+            { rank: 3, icon: "🍕", name: "Restaurant Pick-Up", desc: "Order direct from most restaurants and pick up — zero delivery fees", url: null },
+            { rank: 4, icon: "🥘", name: "Budget Bytes",      desc: "Free recipes optimised for cost — $2–4 per serving", url: "https://budgetbytes.com" },
+            { rank: 5, icon: "📦", name: "Amazon Fresh",      desc: "Free delivery for Prime members near coverage zones", url: "https://www.amazon.com/fresh" }
+        ],
+        subreddit: { name: "r/personalfinance", url: "https://www.reddit.com/r/personalfinance/" },
+        subredditDesc: "The personal finance community regularly breaks down how much delivery memberships actually save vs. just picking up. The answer is usually: not much, unless you order constantly.",
+        newcomerTip: "Store pickup is genuinely free at Target, Walmart, Kroger, and most major grocery chains. For restaurants, ordering directly via their website or app almost always beats third-party apps."
+    },
+    "Dating Apps": {
+        freeSites: [
+            { rank: 1, icon: "💚", name: "Hinge (Free tier)", desc: "Most generous free dating app — unlimited likes and messaging", url: "https://hinge.co" },
+            { rank: 2, icon: "🐝", name: "Bumble (Free tier)", desc: "Women message first — strong free tier", url: "https://bumble.com" },
+            { rank: 3, icon: "💙", name: "OkCupid (Free)",    desc: "Detailed profiles, strong free matching algorithm", url: "https://okcupid.com" },
+            { rank: 4, icon: "🎯", name: "Coffee Meets Bagel", desc: "Free daily matches, quality over quantity approach", url: "https://coffeemeetsbagel.com" },
+            { rank: 5, icon: "🌍", name: "Meetup (Free)",     desc: "Meet people through shared interests — no swiping required", url: "https://meetup.com" }
+        ],
+        subreddit: { name: "r/OnlineDating", url: "https://www.reddit.com/r/OnlineDating/" },
+        subredditDesc: "Honest, unfiltered reviews of every dating app. The community consistently confirms that profile quality matters far more than premium features — save your money.",
+        newcomerTip: "Hinge's free tier is genuinely great and widely considered the best free dating app experience right now. Try it before paying for anything on any platform."
     }
 };

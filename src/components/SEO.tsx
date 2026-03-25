@@ -59,13 +59,6 @@ export default function SEO({
             <meta property="og:image:height" content="630" />
             <meta property="og:site_name" content="Wasted or Worth It?" />
 
-            {/* Twitter / X Card */}
-            <meta name="twitter:card" content="summary_large_image" />
-            <meta name="twitter:title" content={ogTitle || fullTitle} />
-            <meta name="twitter:description" content={ogDescription || description} />
-            <meta name="twitter:image" content={ogImage} />
-
-
             {/* Schema.org JSON-LD */}
             <script type="application/ld+json">
                 {JSON.stringify(baseSchema)}

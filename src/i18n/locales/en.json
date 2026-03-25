@@ -1,7 +1,8 @@
 {
   "nav": {
-    "runway": "Runway",
-    "subscriptions": "Subscriptions"
+    "subscriptions": "Subscriptions",
+    "dashboard": "Dashboard",
+    "runway": "Runway"
   },
   "hero": {
     "headline1": "Stop Guessing.",

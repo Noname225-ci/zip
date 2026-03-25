@@ -1,7 +1,8 @@
 {
   "nav": {
-    "runway": "Autonomía",
-    "subscriptions": "Suscripciones"
+    "subscriptions": "Suscripciones",
+    "dashboard": "Panel",
+    "runway": "Autonomía"
   },
   "hero": {
     "headline1": "Deja de adivinar.",

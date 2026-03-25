@@ -1,20 +1,35 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Wasted or Worth It?
 
-# Run and deploy your AI Studio app
+A free financial calculator to discover the true cost-per-use of your subscriptions and your financial freedom runway.
 
-This contains everything you need to run your app locally.
+## Features
 
-View your app in AI Studio: https://ai.studio/apps/34d946cb-9653-468d-87ff-60c391e3c1ba
+- **Subscription Value Calculator** — enter any subscription, your cost, and monthly usage to see the real cost-per-use and whether it's worth keeping
+- **60+ pre-loaded services** — Netflix, Spotify, Adobe CC, gym memberships, and many more
+- **Freedom Runway Calculator** — see how long your savings can sustain you at your current burn rate
+- **Subscription Dashboard** — track all your subscriptions with total monthly/annual spend and money-pit count
+- **Multi-language** — English, Français, Español, Português (auto-detected from browser)
+- **Multi-currency** — USD, EUR, GBP, CAD, and more
+- **Privacy-first** — all data stays in your browser. No accounts. No servers.
 
-## Run Locally
+## Tech stack
 
-**Prerequisites:**  Node.js
+- React 19 + TypeScript
+- Tailwind CSS v4
+- Framer Motion
+- Recharts
+- jsPDF
+- Cloudflare Workers
 
+## Development
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+```bash
+npm install
+npm run dev       # http://localhost:3000
+npm run build     # production build
+npm run deploy    # build + deploy to Cloudflare
+```
+
+## License
+
+© Wasted or Worth It. All rights reserved.
