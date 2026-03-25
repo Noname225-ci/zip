@@ -288,14 +288,14 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#0a1628] text-slate-100 font-sans selection:bg-teal-500 selection:text-white pb-20">
       <SEO
-        title="Wasted or Worth It? — Subscription & Financial Freedom Calculator"
+        title="Wasted or Worth It? | Subscription and Financial Freedom Calculator"
         description="Calculate your financial freedom runway and the true cost-per-use of your subscriptions. Discover if your expenses are worth it with our free financial tools."
         keywords="financial freedom, freedom runway calculator, financial independence, FIRE calculator, subscription cost per use, subscription tracker, save money, budget optimization, recurring expense tracker, cancel subscriptions, personal finance tools, money management, cost per use calculator"
         canonical="https://wastedorworthit.com/"
         schema={{
           '@context': 'https://schema.org',
           '@type': 'WebApplication',
-          name: 'Wasted or Worth It? — Subscription & Financial Freedom Calculator',
+          name: 'Wasted or Worth It? | Subscription and Financial Freedom Calculator',
           url: 'https://wastedorworthit.com/',
           description: 'Tools to calculate financial independence runway and track subscription value through cost-per-use analysis.',
           applicationCategory: 'FinanceApplication',
@@ -389,7 +389,7 @@ export default function Home() {
         {/* ── MAIN GRID ── */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
 
-          {/* LEFT — Calculator */}
+          {/* LEFT: Calculator */}
           <div className="lg:col-span-8 space-y-6">
 
             <div id="calculator" className="bg-[#0d1e32] rounded-3xl p-6 md:p-8 border border-slate-700/60 shadow-xl">
@@ -745,7 +745,7 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {/* RIGHT — Sidebar */}
+          {/* RIGHT: Sidebar */}
           <div className="lg:col-span-4 space-y-5">
 
             <AnimatePresence>
@@ -861,7 +861,7 @@ export default function Home() {
             <div className="space-y-5 text-slate-300 leading-relaxed text-[15px]">
               <p>
                 The average person pays for <span className="text-white font-semibold">12 subscriptions a month</span> and actively uses fewer than half of them.
-                The rest run silently in the background — $9.99 here, $14.99 there — until the annual total lands and nobody can explain where the money went.
+                The rest run silently in the background. Nine dollars here, fifteen there. By the time the annual total hits, nobody can explain where the money went.
               </p>
               <p>
                 We built this because every other tool that claims to help you with this
@@ -873,8 +873,7 @@ export default function Home() {
               <p>
                 The math is not complicated. If you pay $15/month for something you use 3 times,
                 each use costs $5. Whether that is a good deal depends entirely on
-                <span className="text-white font-semibold"> what you are buying</span> — a gym visit at $5 is a bargain,
-                a Netflix stream at $5 is a waste. We built that distinction in.
+                <span className="text-white font-semibold">what you are buying.</span> A gym visit at $5 is a bargain. A Netflix stream at $5 is a waste. We built that distinction in.
               </p>
               <p>
                 Everything runs in your browser. No data is sent anywhere.
@@ -899,7 +898,7 @@ export default function Home() {
 
             <p className="mt-8 text-xs text-slate-600 text-center">
               No ads influence the verdicts. No affiliate relationship changes what we recommend.
-              The calculator gives you the math — what you do with it is up to you.
+              The calculator gives you the math. What you do with it is up to you.
             </p>
           </div>
         </section>
@@ -1096,7 +1095,7 @@ function ResourcesContent({ sub }: { sub: typeof subscriptionsData[0] }) {
                 <span>{site.icon}</span>
                 <span>
                   <span className="font-bold group-hover:underline underline-offset-4 decoration-teal-500">{site.name}</span>
-                  <span className="text-slate-500"> — {site.desc}</span>
+                  <span className="text-slate-500">, {site.desc}</span>
                 </span>
               </a>
             ))}
