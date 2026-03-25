@@ -1,4 +1,4 @@
-import { useState, useRef, FormEvent, useEffect, lazy, Suspense } from 'react';
+import { useState, useRef, FormEvent, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import { motion, AnimatePresence } from 'motion/react';
@@ -35,7 +35,7 @@ import { useCurrency } from '../context/CurrencyContext';
 import { useSubscription } from '../context/SubscriptionContext';
 import CurrencySelector from '../components/CurrencySelector';
 import LanguageSelector from '../components/LanguageSelector';
-const RunwayCalculator = lazy(() => import('../components/RunwayCalculator'));
+import RunwayCalculator from '../components/RunwayCalculator';
 import { secureStorage } from '../utils/secureStorage';
 
 interface CalculationResult {
@@ -837,9 +837,7 @@ export default function Home() {
                 className="overflow-hidden"
               >
                 <div className="pt-4">
-                  <Suspense fallback={<div className="h-40 flex items-center justify-center"><div className="w-6 h-6 border-2 border-teal-400 border-t-transparent rounded-full animate-spin" /></div>}>
-                    <RunwayCalculator />
-                  </Suspense>
+                  <RunwayCalculator />
                 </div>
               </motion.div>
             )}
