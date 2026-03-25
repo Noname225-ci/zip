@@ -27,6 +27,10 @@ import {
   Upload,
   Lock,
   Timer,
+  Coffee,
+  Banknote,
+  Target,
+  ShieldCheck,
 } from 'lucide-react';
 import { subscriptionsData, categoryThresholds, defaultThresholds } from '../data/subscriptions';
 import { categoryResources } from '../data/resources';
@@ -620,8 +624,8 @@ export default function Home() {
 
                     {/* Latte comparison */}
                     <div className="flex items-start gap-3">
-                      <div className="w-7 h-7 rounded-full bg-amber-500/15 flex items-center justify-center shrink-0 mt-0.5 text-base">
-                        ☕
+                      <div className="w-7 h-7 rounded-full bg-amber-500/15 flex items-center justify-center shrink-0 mt-0.5">
+                        <Coffee size={14} className="text-amber-400" />
                       </div>
                       <p className="text-slate-300 text-sm leading-relaxed">
                         {t('verdict.latte_roughly')}{' '}
@@ -633,8 +637,8 @@ export default function Home() {
                     {/* Savings projection */}
                     {result.savingsProjection && (
                       <div className="flex items-start gap-3">
-                        <div className="w-7 h-7 rounded-full bg-emerald-500/15 flex items-center justify-center shrink-0 mt-0.5 text-base">
-                          💰
+                        <div className="w-7 h-7 rounded-full bg-emerald-500/15 flex items-center justify-center shrink-0 mt-0.5">
+                          <Banknote size={14} className="text-emerald-400" />
                         </div>
                         <p className="text-slate-300 text-sm leading-relaxed">
                           {t('verdict.cancel_pre')}{' '}
@@ -849,7 +853,7 @@ export default function Home() {
           <div className="bg-[#0d1e32] rounded-3xl border border-slate-700/50 p-8 md:p-12 max-w-3xl mx-auto">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-2xl bg-teal-500/15 flex items-center justify-center shrink-0">
-                <span className="text-xl">🔍</span>
+                <Search size={20} className="text-teal-400" />
               </div>
               <h2 className="text-2xl font-display font-bold text-white">Why This Exists</h2>
             </div>
@@ -880,13 +884,13 @@ export default function Home() {
             </div>
 
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {[
-                { icon: '🔒', label: 'Zero data collection', sub: 'Runs 100% in your browser' },
-                { icon: '⚡', label: 'Instant verdict', sub: 'No signup, no waiting' },
-                { icon: '🎯', label: 'Category-smart', sub: 'Different bar for gym vs. streaming' },
-              ].map(({ icon, label, sub }) => (
+              {([
+                { icon: <ShieldCheck size={20} className="text-teal-400" />, bg: 'bg-teal-500/15', label: 'Zero data collection', sub: 'Runs 100% in your browser' },
+                { icon: <Zap size={20} className="text-amber-400" />,        bg: 'bg-amber-500/15',  label: 'Instant verdict',       sub: 'No signup, no waiting' },
+                { icon: <Target size={20} className="text-indigo-400" />,    bg: 'bg-indigo-500/15', label: 'Category-smart',        sub: 'Different bar for gym vs. streaming' },
+              ] as const).map(({ icon, bg, label, sub }) => (
                 <div key={label} className="bg-slate-800/50 rounded-2xl p-4 border border-slate-700/40 text-center">
-                  <div className="text-2xl mb-2">{icon}</div>
+                  <div className={`w-10 h-10 rounded-xl ${bg} flex items-center justify-center mx-auto mb-3`}>{icon}</div>
                   <div className="text-sm font-bold text-white">{label}</div>
                   <div className="text-xs text-slate-500 mt-1">{sub}</div>
                 </div>
