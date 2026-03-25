@@ -134,25 +134,25 @@ export const subscriptionsData = [
     { category: "Dating Apps", id: 'dating_other', name: "Other Dating App Premium", isGeneric: true, alternatives: [ { name: "Hinge (Free tier — most generous)", link: "https://hinge.co" }, { name: "Bumble (Free tier)", link: "https://bumble.com" }, { name: "OkCupid (Free tier)", link: "https://okcupid.com" } ], tips: ["Dating app free tiers have improved significantly — audit what paid features you'd actually use.", "Profile quality almost always outweighs subscription features.", "Try 2–3 different apps on free tiers before paying for any single one.", "Set a time limit on your subscription and reassess — outcomes, not features, matter."] }
 ];
 
-export const categoryThresholds: Record<string, { good: number; consider: number }> = {
-  "Streaming Video": { good: 1.00, consider: 2.50 },
-  "Streaming Music": { good: 0.25, consider: 0.75 },
-  "Gaming": { good: 1.50, consider: 4.00 },
-  "News & Magazines": { good: 0.50, consider: 1.50 },
-  "Software & Productivity": { good: 2.00, consider: 5.00 },
-  "Cloud Storage": { good: 1.00, consider: 3.00 },
-  "VPN": { good: 0.50, consider: 1.50 },
-  "Fitness & Wellness": { good: 6.00, consider: 12.00 }, // Gyms are high value even at $6/visit
-  "Meal Kits & Food": { good: 10.00, consider: 18.00 }, // Meals replace grocery costs
-  "Subscription Boxes": { good: 20.00, consider: 40.00 }, // Physical goods
-  "Education & Learning": { good: 4.00, consider: 10.00 },
-  "Audiobooks & Reading": { good: 3.00, consider: 8.00 },  // per book/listen
-  "Language Learning": { good: 2.00, consider: 6.00 },     // per session
-  "AI Tools": { good: 1.00, consider: 3.00 },              // per task/query
-  "Password & Security": { good: 0.10, consider: 0.50 },   // always-on utility; near-zero threshold
-  "Notes & Productivity": { good: 1.50, consider: 4.00 },  // per active use session
-  "Food Delivery": { good: 8.00, consider: 20.00 },        // per order (vs. pick-up savings)
-  "Dating Apps": { good: 15.00, consider: 40.00 },         // per meaningful interaction
+export const categoryThresholds: Record<string, { good: number; consider: number; unit: string }> = {
+  "Streaming Video":         { good: 1.00,  consider: 2.50,  unit: "stream"      },
+  "Streaming Music":         { good: 0.25,  consider: 0.75,  unit: "listen"      },
+  "Gaming":                  { good: 1.50,  consider: 4.00,  unit: "session"     },
+  "News & Magazines":        { good: 0.50,  consider: 1.50,  unit: "article"     },
+  "Software & Productivity": { good: 2.00,  consider: 5.00,  unit: "session"     },
+  "Cloud Storage":           { good: 1.00,  consider: 3.00,  unit: "day"         },
+  "VPN":                     { good: 0.50,  consider: 1.50,  unit: "day"         },
+  "Fitness & Wellness":      { good: 6.00,  consider: 12.00, unit: "visit"       },
+  "Meal Kits & Food":        { good: 10.00, consider: 18.00, unit: "meal"        },
+  "Subscription Boxes":      { good: 20.00, consider: 40.00, unit: "box"         },
+  "Education & Learning":    { good: 4.00,  consider: 10.00, unit: "lesson"      },
+  "Audiobooks & Reading":    { good: 3.00,  consider: 8.00,  unit: "book"        },
+  "Language Learning":       { good: 2.00,  consider: 6.00,  unit: "session"     },
+  "AI Tools":                { good: 1.00,  consider: 3.00,  unit: "query"       },
+  "Password & Security":     { good: 0.10,  consider: 0.50,  unit: "day"         },
+  "Notes & Productivity":    { good: 1.50,  consider: 4.00,  unit: "session"     },
+  "Food Delivery":           { good: 8.00,  consider: 20.00, unit: "order"       },
+  "Dating Apps":             { good: 15.00, consider: 40.00, unit: "match"       },
 };
 
-export const defaultThresholds = { good: 2.00, consider: 5.00 };
+export const defaultThresholds = { good: 2.00, consider: 5.00, unit: "use" };

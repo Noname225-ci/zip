@@ -201,21 +201,25 @@ export default function Home() {
 
       let verdict: string, verdictClass: 'good' | 'consider' | 'wasted', detailMsg: string, meterPct: number, showSuggestions: boolean;
 
+      const unit = t(`units.${thresholds.unit}`, thresholds.unit);
+      const benchmark = formatCurrency(thresholds.good);
+      const category = sub.category;
+
       if (costPerUse === Infinity) {
         verdict = t('verdict.wasted'); verdictClass = 'wasted';
         detailMsg = t('verdict.detail_zero', { cost: formatCurrency(monthlyCost), annual: formatCurrency(annualCost) });
         meterPct = 0; showSuggestions = true;
       } else if (costPerUse <= thresholds.good) {
         verdict = t('verdict.good'); verdictClass = 'good';
-        detailMsg = t('verdict.detail_good', { cost: formatCurrency(costPerUse) });
+        detailMsg = t('verdict.detail_good', { cost: formatCurrency(costPerUse), unit, benchmark, category });
         meterPct = 100; showSuggestions = false;
       } else if (costPerUse <= thresholds.consider) {
         verdict = t('verdict.consider'); verdictClass = 'consider';
-        detailMsg = t('verdict.detail_consider', { cost: formatCurrency(costPerUse) });
+        detailMsg = t('verdict.detail_consider', { cost: formatCurrency(costPerUse), unit, benchmark, category });
         meterPct = 50; showSuggestions = true;
       } else {
         verdict = t('verdict.wasted'); verdictClass = 'wasted';
-        detailMsg = t('verdict.detail_wasted', { cost: formatCurrency(costPerUse) });
+        detailMsg = t('verdict.detail_wasted', { cost: formatCurrency(costPerUse), unit, benchmark, category });
         meterPct = 20; showSuggestions = true;
       }
 

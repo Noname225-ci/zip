@@ -61,9 +61,9 @@
     "cancel_3yr": "over 3 years,",
     "cancel_5yr": "over 5 years.",
     "detail_zero": "You're paying {{cost}}/mo for nothing. That's {{annual}} a year gone.",
-    "detail_good": "At {{cost}} per use, this is a steal. Keep it!",
-    "detail_consider": "{{cost}} per use is a bit steep. Use it more or find a deal.",
-    "detail_wasted": "At {{cost}} per use, you're overpaying. Cancel or downgrade."
+    "detail_good": "At {{cost}}/{{unit}}, you are well under the {{benchmark}} benchmark for {{category}}. Keep it!",
+    "detail_consider": "At {{cost}}/{{unit}}, you are pushing the {{benchmark}} benchmark for {{category}}. Use it more or find a better deal.",
+    "detail_wasted": "At {{cost}}/{{unit}}, you are well above the {{benchmark}} benchmark for {{category}}. Cancel or downgrade."
   },
   "sidebar": {
     "did_you_know": "Did You Know?",
@@ -172,5 +172,21 @@
     "fr": "Français",
     "es": "Español",
     "pt": "Português"
+  },
+  "units": {
+    "stream": "stream",
+    "listen": "listen",
+    "session": "session",
+    "article": "article",
+    "day": "day",
+    "visit": "visit",
+    "meal": "meal",
+    "box": "box",
+    "lesson": "lesson",
+    "book": "book",
+    "query": "query",
+    "order": "order",
+    "match": "match",
+    "use": "use"
   }
 }
