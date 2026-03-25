@@ -2,6 +2,7 @@ import { useState, useRef, FormEvent, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import SEO from '../components/SEO';
 import { motion, AnimatePresence } from 'motion/react';
+import { CAPS, clampInput, sanitiseText, parseAndClamp } from '../utils/validation';
 import {
   Calculator,
   DollarSign,
@@ -414,12 +415,12 @@ export default function Home() {
     setResult(null);
     setAddedToDashboard(false);
 
-    const costValue = parseFloat(cost);
-    const usageValue = parseInt(usage, 10);
+    const costValue = parseAndClamp(cost, CAPS.COST_MIN, CAPS.COST_MAX) ?? -1;
+    const usageValue = parseAndClamp(usage, CAPS.USAGE_MIN, CAPS.USAGE_MAX) ?? -1;
 
     if (!selectedSubId) { setError(t('calculator.error_select')); setLoading(false); return; }
-    if (isNaN(costValue) || costValue <= 0) { setError(t('calculator.error_cost')); setLoading(false); return; }
-    if (isNaN(usageValue) || usageValue < 0) { setError(t('calculator.error_usage')); setLoading(false); return; }
+    if (costValue <= 0) { setError(t('calculator.error_cost')); setLoading(false); return; }
+    if (usageValue < 0) { setError(t('calculator.error_usage')); setLoading(false); return; }
 
     const sub = subscriptionsData.find(s => s.id === selectedSubId);
     if (!sub) { setLoading(false); return; }
@@ -471,7 +472,7 @@ export default function Home() {
     setFilteredSubs(subscriptionsData);
   };
 
-  const adjustUsage = (delta: number) => setUsage(String(Math.max(0, parseInt(usage || '0', 10) + delta)));
+  const adjustUsage = (delta: number) => setUsage(String(Math.min(CAPS.USAGE_MAX, Math.max(0, parseInt(usage || '0', 10) + delta))));
 
   const handleAddToDashboard = () => {
     if (!result) return;
@@ -635,7 +636,7 @@ export default function Home() {
                         aria-label={t('calculator.service_label')}
                         className="min-w-0 w-full pl-12 pr-12 py-4 bg-slate-800 border border-slate-600 rounded-2xl text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none font-bold text-lg placeholder:text-slate-500 transition-all"
                         value={searchTerm}
-                        onChange={e => { setSearchTerm(e.target.value); setIsDropdownOpen(true); if (selectedSubId) setSelectedSubId(''); }}
+                        onChange={e => { setSearchTerm(sanitiseText(e.target.value, CAPS.SEARCH_MAX_LEN)); setIsDropdownOpen(true); if (selectedSubId) setSelectedSubId(''); }}
                         onFocus={() => setIsDropdownOpen(true)}
                         onWheel={e => e.currentTarget.blur()}
                       />
@@ -685,16 +686,16 @@ export default function Home() {
 
                   {/* Cost */}
                   <div className="space-y-2">
-                    <label className="text-sm font-bold text-slate-300 uppercase tracking-wider">{t('calculator.cost_label')}</label>
+                    <label className="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">{t('calculator.cost_label')} <span className="text-xs font-normal text-slate-500 normal-case">max {currency.symbol}{CAPS.COST_MAX.toLocaleString()}</span></label>
                     <div className="relative">
                       <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-bold">{currency.symbol}</span>
                       <input
-                        type="number" step="0.01"
+                        type="number" step="0.01" min="0.01" max="{CAPS.COST_MAX}"
                         placeholder={t('calculator.cost_placeholder')}
                         aria-label={t('calculator.cost_label')}
                         className="min-w-0 w-full pl-9 pr-4 py-4 bg-slate-800 border border-slate-600 rounded-2xl text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none font-bold text-lg placeholder:text-slate-500"
                         value={cost}
-                        onChange={e => setCost(e.target.value)}
+                        onChange={e => setCost(clampInput(e.target.value, CAPS.COST_MIN, CAPS.COST_MAX))}
                         onWheel={e => e.currentTarget.blur()}
                       />
                     </div>
@@ -716,18 +717,18 @@ export default function Home() {
 
                   {/* Usage stepper */}
                   <div className="space-y-2 md:col-span-2">
-                    <label className="text-sm font-bold text-slate-300 uppercase tracking-wider">{t('calculator.usage_label')}</label>
+                    <label className="text-sm font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">{t('calculator.usage_label')} <span className="text-xs font-normal text-slate-500 normal-case">max {CAPS.USAGE_MAX}×/mo</span></label>
                     <div className="flex items-center gap-4">
                       <button type="button" onClick={() => adjustUsage(-1)} aria-label="Decrease usage"
                         className="w-14 h-14 flex items-center justify-center rounded-2xl bg-slate-700 text-white hover:bg-slate-600 active:scale-95 transition-all font-display text-2xl font-bold border border-slate-600">
                         −
                       </button>
                       <input
-                        type="number" min="0" placeholder="0"
+                        type="number" min="0" max={CAPS.USAGE_MAX} placeholder="0"
                         aria-label={t('calculator.usage_label')}
                         className="min-w-0 flex-1 text-center py-4 bg-slate-800 border border-slate-600 rounded-2xl text-white font-display text-2xl font-bold focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none"
                         value={usage}
-                        onChange={e => setUsage(e.target.value)}
+                        onChange={e => setUsage(clampInput(e.target.value, CAPS.USAGE_MIN, CAPS.USAGE_MAX))}
                         onWheel={e => e.currentTarget.blur()}
                       />
                       <button type="button" onClick={() => adjustUsage(1)} aria-label="Increase usage"
@@ -1013,7 +1014,7 @@ export default function Home() {
                         <input
                           type="number" min="1" max="30"
                           className="min-w-[3rem] w-12 bg-transparent border-b border-slate-600 text-white focus:border-teal-500 outline-none font-bold text-lg text-center"
-                          value={reminderDays} onChange={e => setReminderDays(e.target.value)} onWheel={e => e.currentTarget.blur()}
+                          value={reminderDays} onChange={e => setReminderDays(clampInput(e.target.value, CAPS.REMINDER_DAYS_MIN, CAPS.REMINDER_DAYS_MAX))} onWheel={e => e.currentTarget.blur()}
                         />
                         <span className="text-slate-300 font-bold text-sm">{t('reminder.days_before')}</span>
                       </div>

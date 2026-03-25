@@ -6,43 +6,40 @@
 
 const SALT = "wasted_or_worth_it_v1_";
 
-/**
- * Basic Base64 encoding with a salt to obfuscate data.
- * This is NOT banking-level encryption, but it is sufficient to hide
- * plain JSON data from generic third-party ad/tracking scripts.
- */
+// Hard cap: refuse to write more than 500 KB to any single key
+const MAX_STORAGE_BYTES = 500_000;
+
 function obfuscate(data: string): string {
     try {
-        // Add salt, encode special characters properly, then base64
         const saltedData = SALT + data;
-        // Using encodeURIComponent handles UTF-8 characters better than straight btoa
         return btoa(encodeURIComponent(saltedData));
     } catch (e) {
         console.error("Failed to obfuscate data", e);
-        return data; // Fallback to plain if error
+        return data;
     }
 }
 
-/**
- * Basic Base64 decoding with a salt check.
- */
 function deobfuscate(data: string): string | null {
     try {
         const decoded = decodeURIComponent(atob(data));
         if (decoded.startsWith(SALT)) {
             return decoded.substring(SALT.length);
         }
-        return null; // Salt doesn't match, might be old unencrypted data or corrupted
-    } catch (e) {
-        // If it fails to decode, it might be old plain-text data
+        return null;
+    } catch (_e) {
         return null;
     }
 }
 
 export const secureStorage = {
-    setItem(key: string, value: any): void {
+    setItem(key: string, value: unknown): void {
         try {
             const jsonString = JSON.stringify(value);
+            // Guard: refuse to write oversized payloads that could exhaust storage quota
+            if (jsonString.length > MAX_STORAGE_BYTES) {
+                console.warn(`secureStorage: refusing oversized write for key "${key}" (${jsonString.length} bytes)`);
+                return;
+            }
             const securedString = obfuscate(jsonString);
             localStorage.setItem(key, securedString);
         } catch (error) {
@@ -55,22 +52,18 @@ export const secureStorage = {
             const item = localStorage.getItem(key);
             if (!item) return null;
 
-            // First try to deobfuscate
             const deobfuscatedString = deobfuscate(item);
 
             if (deobfuscatedString) {
                 return JSON.parse(deobfuscatedString) as T;
             }
 
-            // Fallback: If deobfuscate returned null, it might be old unencrypted data from before this update.
-            // We try to parse it directly. If it works, we should ideally re-save it securely.
+            // Fallback: old unencrypted data — parse and re-save securely
             try {
                 const parsed = JSON.parse(item) as T;
-                // Re-save securely for the future
                 this.setItem(key, parsed);
                 return parsed;
-            } catch (parseError) {
-                // Not valid JSON either
+            } catch {
                 return null;
             }
         } catch (error) {

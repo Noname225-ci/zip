@@ -11,6 +11,7 @@ import { useCurrency } from '../context/CurrencyContext';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { secureStorage } from '../utils/secureStorage';
+import { CAPS, clampInput } from '../utils/validation';
 
 const STORAGE_KEY = 'runway_calculator_data';
 
@@ -139,11 +140,11 @@ export default function RunwayCalculator() {
   }, [expenses, debts, savings, expenseReduction, safetyBuffer]);
 
   const handleExpenseChange = (key: string, value: string) => {
-    setExpenses(prev => ({ ...prev, [key]: value }));
+    setExpenses(prev => ({ ...prev, [key]: clampInput(value, 0, CAPS.EXPENSE_MAX) }));
   };
 
   const handleDebtChange = (key: string, value: string) => {
-    setDebts(prev => ({ ...prev, [key]: value }));
+    setDebts(prev => ({ ...prev, [key]: clampInput(value, 0, CAPS.DEBT_MAX) }));
   };
 
   const handleExport = () => {
@@ -273,7 +274,7 @@ export default function RunwayCalculator() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-700 focus-within:border-indigo-500 transition-colors">
-                    <label className="block text-xs font-bold text-slate-500 mb-1">{t('runway.total_liquid')}</label>
+                    <label className="block text-xs font-bold text-slate-500 mb-1 flex justify-between">{t('runway.total_liquid')} <span className="font-normal opacity-60">max {CAPS.SAVINGS_MAX.toLocaleString()}</span></label>
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-400 font-bold text-lg">{currency.symbol}</span>
                       <input
@@ -281,13 +282,13 @@ export default function RunwayCalculator() {
                         placeholder="0"
                         className="bg-transparent min-w-0 w-full text-xl font-bold text-white outline-none placeholder:text-slate-700 py-1"
                         value={savings}
-                        onChange={e => setSavings(e.target.value)}
+                        onChange={e => setSavings(clampInput(e.target.value, 0, CAPS.SAVINGS_MAX))}
                         onWheel={(e) => e.currentTarget.blur()}
                       />
                     </div>
                   </div>
                   <div className="bg-slate-900/80 p-4 rounded-2xl border border-slate-700 focus-within:border-indigo-500 transition-colors">
-                    <label className="block text-xs font-bold text-slate-500 mb-1">{t('runway.monthly_income_net')}</label>
+                    <label className="block text-xs font-bold text-slate-500 mb-1 flex justify-between">{t('runway.monthly_income_net')} <span className="font-normal opacity-60">max {CAPS.INCOME_MAX.toLocaleString()}</span></label>
                     <div className="flex items-center gap-2">
                       <span className="text-slate-400 font-bold text-lg">{currency.symbol}</span>
                       <input
@@ -295,7 +296,7 @@ export default function RunwayCalculator() {
                         placeholder={t('runway.income_optional')}
                         className="bg-transparent min-w-0 w-full text-xl font-bold text-white outline-none placeholder:text-slate-700 py-1"
                         value={income}
-                        onChange={e => setIncome(e.target.value)}
+                        onChange={e => setIncome(clampInput(e.target.value, 0, CAPS.INCOME_MAX))}
                         onWheel={(e) => e.currentTarget.blur()}
                       />
                     </div>
